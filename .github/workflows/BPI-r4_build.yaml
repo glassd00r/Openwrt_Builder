@@ -71,7 +71,7 @@ jobs:
       - name: Include custom files
         run: |
           mkdir -p ${{ env.CUSTOM_FILES_PATH }}
-          mv custom_repo/BPIr4/${{ env.CUSTOM_FILES_PATH }}* ${{ env.CUSTOM_FILES_PATH }}
+          mv custom_repo/BPI-r4/${{ env.CUSTOM_FILES_PATH }}* ${{ env.CUSTOM_FILES_PATH }}
       - name: Build the firmware image
         run: make download world V=s -j$(nproc)
       - name: Package output
@@ -91,7 +91,7 @@ jobs:
       - name: Download artifacts
         uses: actions/download-artifact@v4
         with:
-          name: ipq807x-images
+          name: bpi_r4-images
       - name: Extract artifacts
         run: tar xf bpi_r4-images.tar
       - name: Get current date

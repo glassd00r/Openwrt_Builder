@@ -56,12 +56,12 @@ jobs:
           ./scripts/feeds install -a
       - name: Apply HW OFFLOAD PATCH 115
         run: |
-          mv custom_repo/patches/BPIr4/${{ env.HW_OFFLOAD_115_PATCH }} target/linux/mediatek/patches-6.6/${{ env.HW_OFFLOAD_115_PATCH }}
+          mv custom_repo/patches/BPI-r4/${{ env.HW_OFFLOAD_115_PATCH }} target/linux/mediatek/patches-6.6/${{ env.HW_OFFLOAD_115_PATCH }}
           cd target/linux/mediatek/patches-6.6
           git apply ${{ env.HW_OFFLOAD_115_PATCH }}
       - name: Apply HW OFFLOAD PATCH 116
         run: |
-          mv custom_repo/patches/BPIr4/${{ env.HW_OFFLOAD_116_PATCH }} target/linux/mediatek/patches-6.6/${{ env.HW_OFFLOAD_116_PATCH }}
+          mv custom_repo/patches/BPI-r4/${{ env.HW_OFFLOAD_116_PATCH }} target/linux/mediatek/patches-6.6/${{ env.HW_OFFLOAD_116_PATCH }}
           cd target/linux/mediatek/patches-6.6
           git apply ${{ env.HW_OFFLOAD_116_PATCH }}
       - name: Configure firmware image

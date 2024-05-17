@@ -1,0 +1,39 @@
+From 8203d3606663e1b4688c3267d01a2a3d3659d54f Mon Sep 17 00:00:00 2001
+From: Elad Yifee <eladwf@gmail.com>
+Date: Sun, 5 May 2024 14:36:40 +0300
+Subject: [PATCH] Add PPE source port comparison
+
+Signed-off-by: Elad Yifee <eladwf@gmail.com>
+---
+ drivers/net/ethernet/mediatek/mtk_ppe.c      | 3 ++-
+ drivers/net/ethernet/mediatek/mtk_ppe_regs.h | 1 +
+ 2 files changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/net/ethernet/mediatek/mtk_ppe.c b/drivers/net/ethernet/mediatek/mtk_ppe.c
+index 0acee405a749..1598a58a032d 100644
+--- a/drivers/net/ethernet/mediatek/mtk_ppe.c
++++ b/drivers/net/ethernet/mediatek/mtk_ppe.c
+@@ -1052,7 +1052,8 @@ void mtk_ppe_start(struct mtk_ppe *ppe)
+ 	val = MTK_PPE_GLO_CFG_EN |
+ 	      MTK_PPE_GLO_CFG_IP4_L4_CS_DROP |
+ 	      MTK_PPE_GLO_CFG_IP4_CS_DROP |
+-	      MTK_PPE_GLO_CFG_FLOW_DROP_UPDATE;
++	      MTK_PPE_GLO_CFG_FLOW_DROP_UPDATE |
++		  MTK_PPE_GLO_CFG_SP_CMP_EN;
+ 	ppe_w32(ppe, MTK_PPE_GLO_CFG, val);
+ 
+ 	ppe_w32(ppe, MTK_PPE_DEFAULT_CPU_PORT, 0);
+diff --git a/drivers/net/ethernet/mediatek/mtk_ppe_regs.h b/drivers/net/ethernet/mediatek/mtk_ppe_regs.h
+index 3ce088eef0ef..7f59966d70d2 100644
+--- a/drivers/net/ethernet/mediatek/mtk_ppe_regs.h
++++ b/drivers/net/ethernet/mediatek/mtk_ppe_regs.h
+@@ -17,6 +17,7 @@
+ #define MTK_PPE_GLO_CFG_FLOW_DROP_UPDATE	BIT(9)
+ #define MTK_PPE_GLO_CFG_UDP_LITE_EN		BIT(10)
+ #define MTK_PPE_GLO_CFG_UDP_LEN_DROP		BIT(11)
++#define MTK_PPE_GLO_CFG_SP_CMP_EN		BIT(25)
+ #define MTK_PPE_GLO_CFG_MCAST_ENTRIES		GNEMASK(13, 12)
+ #define MTK_PPE_GLO_CFG_BUSY			BIT(31)
+ 
+-- 
+2.44.0

@@ -1,2 +1,0 @@
-uci -q batch << EOI
-EOI

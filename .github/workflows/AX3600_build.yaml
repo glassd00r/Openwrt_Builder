@@ -1,4 +1,4 @@
-name: Build OpenWrt for Qualcommax_AX3600 and release
+name: Build OpenWrt for Qualcommax_ipq807x_AX3600 and release
 
 on:
   workflow_dispatch:

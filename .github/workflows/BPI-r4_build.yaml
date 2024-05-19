@@ -4,11 +4,9 @@ on:
   workflow_dispatch:
 
 env:
-  REMOTE_REPOSITORY: openwrt/openwrt
-  REMOTE_BRANCH: main
+  REMOTE_REPOSITORY: eladwf/openwrt
+  REMOTE_BRANCH: bpi_r4_ppe
   CONFIG_FILE: bpi-r4.config
-  HW_OFFLOAD_115_PATCH: 115-net-ethernet-mtk_eth_soc-fix-dma-for-devices-with-more-than-4gb-of-dram.patch
-  HW_OFFLOAD_116_PATCH: 116-add-ppe-source-port.patch
   CUSTOM_FILES_PATH: files/
   RELEASE_PREFIX: Mediatek_mt7988a_bpi-r4
 
@@ -54,16 +52,6 @@ jobs:
         run: |
           ./scripts/feeds update -a
           ./scripts/feeds install -a
-      - name: Apply HW OFFLOAD PATCH 115
-        run: |
-          mv custom_repo/patches/BPI-r4/${{ env.HW_OFFLOAD_115_PATCH }} target/linux/mediatek/patches-6.6/${{ env.HW_OFFLOAD_115_PATCH }}
-          cd target/linux/mediatek/patches-6.6
-          git apply ${{ env.HW_OFFLOAD_115_PATCH }}
-      - name: Apply HW OFFLOAD PATCH 116
-        run: |
-          mv custom_repo/patches/BPI-r4/${{ env.HW_OFFLOAD_116_PATCH }} target/linux/mediatek/patches-6.6/${{ env.HW_OFFLOAD_116_PATCH }}
-          cd target/linux/mediatek/patches-6.6
-          git apply ${{ env.HW_OFFLOAD_116_PATCH }}
       - name: Configure firmware image
         run: |
           mv custom_repo/${{ env.CONFIG_FILE }} .config

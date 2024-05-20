@@ -54,12 +54,12 @@ jobs:
         run: |
           ./scripts/feeds update -a
           ./scripts/feeds install -a
-      - name: Apply HW OFFLOAD PATCH 115
+      - name: Apply MULTIPLE PPEs SUPPORT PATCH
         run: |
           mv custom_repo/patches/BPI-r4/${{ env.PPE_OFFLOAD_001_PATCH }} target/linux/mediatek/patches-6.6/${{ env.PPE_OFFLOAD_001_PATCH }}
           cd target/linux/mediatek/patches-6.6
           git apply ${{ env.PPE_OFFLOAD_001_PATCH }}
-      - name: Apply HW OFFLOAD PATCH 116
+      - name: Apply SP_CMP PATCH
         run: |
           mv custom_repo/patches/BPI-r4/${{ env.PPE_OFFLOAD_002_PATCH }} target/linux/mediatek/patches-6.6/${{ env.PPE_OFFLOAD_002_PATCH }}
           cd target/linux/mediatek/patches-6.6

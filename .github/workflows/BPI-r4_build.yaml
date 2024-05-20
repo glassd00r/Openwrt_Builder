@@ -4,11 +4,9 @@ on:
   workflow_dispatch:
 
 env:
-  REMOTE_REPOSITORY: openwrt/openwrt
-  REMOTE_BRANCH: main
+  REMOTE_REPOSITORY: glassd00r/openwrt
+  REMOTE_BRANCH: bpi_r4_ppe
   CONFIG_FILE: bpi-r4.config
-  PPE_OFFLOAD_001_PATCH: 001-net-ethernet-mtk_eth_soc-ppe-add-support-for-multiple-ppes.patch
-  PPE_OFFLOAD_002_PATCH: 002-net-ethernet-mtk_eth_soc-ppe-add-source-port-compari.patch
   CUSTOM_FILES_PATH: files/
   RELEASE_PREFIX: Mediatek_mt7988a_bpi-r4
 
@@ -54,16 +52,6 @@ jobs:
         run: |
           ./scripts/feeds update -a
           ./scripts/feeds install -a
-      - name: Apply MULTIPLE PPEs SUPPORT PATCH
-        run: |
-          mv custom_repo/patches/BPI-r4/${{ env.PPE_OFFLOAD_001_PATCH }} target/linux/mediatek/patches-6.6/${{ env.PPE_OFFLOAD_001_PATCH }}
-          cd target/linux/mediatek/patches-6.6
-          git apply ${{ env.PPE_OFFLOAD_001_PATCH }}
-      - name: Apply SP_CMP PATCH
-        run: |
-          mv custom_repo/patches/BPI-r4/${{ env.PPE_OFFLOAD_002_PATCH }} target/linux/mediatek/patches-6.6/${{ env.PPE_OFFLOAD_002_PATCH }}
-          cd target/linux/mediatek/patches-6.6
-          git apply ${{ env.PPE_OFFLOAD_002_PATCH }}
       - name: Configure firmware image
         run: |
           mv custom_repo/${{ env.CONFIG_FILE }} .config

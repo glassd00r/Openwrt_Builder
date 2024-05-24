@@ -4,13 +4,11 @@ on:
   workflow_dispatch:
 
 env:
-  REMOTE_REPOSITORY: glassd00r/openwrt
+  REMOTE_REPOSITORY: BPI-SINOVOIP/BPI-R4-OPENWRT-V21.02
   REMOTE_BRANCH: main
-  CONFIG_FILE: bpi-r4.config
-  PPE_OFFLOAD_001_PATCH: 001-net-ethernet-mtk_eth_soc-ppe-add-support-for-multiple-ppes.patch
-  PPE_OFFLOAD_002_PATCH: 002-net-ethernet-mtk_eth_soc-ppe-add-source-port-compari.patch
+  CONFIG_FILE: mtk-bpi-r4.config
   CUSTOM_FILES_PATH: files/
-  RELEASE_PREFIX: Mediatek_mt7988a_bpi-r4
+  RELEASE_PREFIX: MTK_BPI-r4
 
 jobs:
   check_commits:
@@ -54,16 +52,6 @@ jobs:
         run: |
           ./scripts/feeds update -a
           ./scripts/feeds install -a
-      - name: Apply Add multiple PPEs support patch
-        run: |
-          mv custom_repo/patches/BPI-r4/${{ env.PPE_OFFLOAD_001_PATCH }} target/linux/mediatek/patches-6.6/${{ env.PPE_OFFLOAD_001_PATCH }}
-          cd target/linux/mediatek/patches-6.6
-          git apply ${{ env.PPE_OFFLOAD_001_PATCH }}
-      - name: Apply Add SP_CMP patch
-        run: |
-          mv custom_repo/patches/BPI-r4/${{ env.PPE_OFFLOAD_002_PATCH }} target/linux/mediatek/patches-6.6/${{ env.PPE_OFFLOAD_002_PATCH }}
-          cd target/linux/mediatek/patches-6.6
-          git apply ${{ env.PPE_OFFLOAD_002_PATCH }}
       - name: Configure firmware image
         run: |
           mv custom_repo/${{ env.CONFIG_FILE }} .config
@@ -79,8 +67,8 @@ jobs:
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: bpi_r4-images
-          path: bpi_r4-images.tar
+          name: mtk_bpi_r4-images
+          path: mtk_bpi_r4-images.tar
 
   release:
     name: Create release
@@ -91,9 +79,9 @@ jobs:
       - name: Download artifacts
         uses: actions/download-artifact@v4
         with:
-          name: bpi_r4-images
+          name: mtk_bpi_r4-images
       - name: Extract artifacts
-        run: tar xf bpi_r4-images.tar
+        run: tar xf mtk_bpi_r4-images.tar
       - name: Get current date
         run: echo "RELEASE_DATE=$(date +%F)" >> $GITHUB_ENV
       - name: Create release
@@ -101,7 +89,7 @@ jobs:
         with:
           files: bin/targets/mediatek/filogic/*
           tag_name: ${{ env.RELEASE_PREFIX }}-${{ env.RELEASE_DATE }}
-          name: Openwrt BPI-r4 ${{ env.RELEASE_DATE }}
+          name: MTK Openwrt 21.02 BPI-r4 ${{ env.RELEASE_DATE }}
           body: |
             Updated prebuilt images for ${{ env.RELEASE_DATE }}
             Build Commit: ${{ needs.check_commits.outputs.latest_commit_sha }}

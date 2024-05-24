@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
 
 env:
-  REMOTE_REPOSITORY: BPI-SINOVOIP/BPI-R4-OPENWRT-V21.02
+  REMOTE_REPOSITORY: glassd00r/BPI-R4-OPENWRT-V21.02
   REMOTE_BRANCH: main
   CONFIG_FILE: mtk-bpi-r4.config
   CUSTOM_FILES_PATH: files/

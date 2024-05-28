@@ -63,7 +63,7 @@ jobs:
       - name: Build the firmware image
         run: make download world V=s -j$(nproc)
       - name: Package output
-        run: tar -cvf bpi_r4-images.tar bin/targets/mediatek/filogic
+        run: tar -cvf mtk_bpi_r4-images.tar bin/targets/mediatek/filogic
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:

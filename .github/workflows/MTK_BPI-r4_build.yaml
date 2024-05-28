@@ -4,8 +4,8 @@ on:
   workflow_dispatch:
 
 env:
-  REMOTE_REPOSITORY: glassd00r/BPI-R4-OPENWRT-V21.02
-  REMOTE_BRANCH: main
+  REMOTE_REPOSITORY: glassd00r/immortalwrt-mt798x
+  REMOTE_BRANCH: mt7988
   CONFIG_FILE: mtk-bpi-r4.config
   CUSTOM_FILES_PATH: files/
   RELEASE_PREFIX: MTK_BPI-r4
@@ -13,7 +13,7 @@ env:
 jobs:
   check_commits:
     name: Check for new commits
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     outputs:
       new_commits: ${{ steps.check_new_commits.outputs.new_commits }}
       latest_commit_sha: ${{ steps.check_new_commits.outputs.latest_commit_sha }}

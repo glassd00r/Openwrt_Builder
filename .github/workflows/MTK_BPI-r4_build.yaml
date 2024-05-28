@@ -30,7 +30,7 @@ jobs:
     name: Build OpenWrt
     needs: check_commits
     if: needs.check_commits.outputs.new_commits == 'true' || github.event_name == 'workflow_dispatch'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - name: Install dependencies
         run: |
@@ -74,7 +74,7 @@ jobs:
     name: Create release
     needs: [build, check_commits]
     if: needs.build.result == 'success'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - name: Download artifacts
         uses: actions/download-artifact@v4

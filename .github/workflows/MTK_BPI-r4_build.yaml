@@ -13,7 +13,7 @@ env:
 jobs:
   check_commits:
     name: Check for new commits
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     outputs:
       new_commits: ${{ steps.check_new_commits.outputs.new_commits }}
       latest_commit_sha: ${{ steps.check_new_commits.outputs.latest_commit_sha }}
@@ -30,7 +30,7 @@ jobs:
     name: Build OpenWrt
     needs: check_commits
     if: needs.check_commits.outputs.new_commits == 'true' || github.event_name == 'workflow_dispatch'
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
       - name: Install dependencies
         run: |
@@ -70,7 +70,7 @@ jobs:
     name: Create release
     needs: [build, check_commits]
     if: needs.build.result == 'success'
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
       - name: Download artifacts
         uses: actions/download-artifact@v4

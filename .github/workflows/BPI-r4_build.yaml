@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
 
 env:
-  REMOTE_REPOSITORY: glassd00r/dango_openwrt_staging
+  REMOTE_REPOSITORY: glassd00r/openwrt
   REMOTE_BRANCH: main
   CONFIG_FILE: bpi-r4.config
   PPE_OFFLOAD_001_PATCH: 001-net-ethernet-mtk_eth_soc-ppe-add-support-for-multiple-ppes.patch

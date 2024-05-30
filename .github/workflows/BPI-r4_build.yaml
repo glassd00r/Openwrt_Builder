@@ -61,7 +61,7 @@ jobs:
 
   release:
     name: Create release
-    needs: [build, check_commits]
+    needs: [build]
     if: needs.build.result == 'success'
     runs-on: ubuntu-latest
     steps:

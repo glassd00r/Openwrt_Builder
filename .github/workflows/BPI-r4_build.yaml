@@ -12,25 +12,8 @@ env:
   RELEASE_PREFIX: Mediatek_mt7988a_bpi-r4
 
 jobs:
-  check_commits:
-    name: Check for new commits
-    runs-on: ubuntu-latest
-    outputs:
-      new_commits: ${{ steps.check_new_commits.outputs.new_commits }}
-      latest_commit_sha: ${{ steps.check_new_commits.outputs.latest_commit_sha }}
-    steps:
-      - name: Check for new commits
-        id: check_new_commits
-        run: |
-          latest_commit_sha=$(curl -sL "https://api.github.com/repos/${{ env.REMOTE_REPOSITORY }}/commits?sha=${{ env.REMOTE_BRANCH }}&per_page=1" | jq -r '.[0].sha')
-          last_built_commit_sha=$(curl -sL "https://api.github.com/repos/${{ github.repository }}/releases/latest" | jq -r '.body' | grep -oP 'Build Commit: \K\w+' || echo '')
-          echo "new_commits=$([[ "$latest_commit_sha" != "$last_built_commit_sha" ]] && echo "true" || echo "false")" >> $GITHUB_OUTPUT
-          echo "latest_commit_sha=$latest_commit_sha" >> $GITHUB_OUTPUT
-
   build:
     name: Build OpenWrt
-    needs: check_commits
-    if: needs.check_commits.outputs.new_commits == 'true' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     steps:
       - name: Install dependencies

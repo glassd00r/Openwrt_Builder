@@ -7,7 +7,6 @@ env:
   REMOTE_REPOSITORY: glassd00r/openwrt
   REMOTE_BRANCH: main
   CONFIG_FILE: bpi-r4.config
-  Multiple_PPE_PATCH: 001-multiple_ppe.patch
   CUSTOM_FILES_PATH: files/
   RELEASE_PREFIX: Mediatek_mt7988a_bpi-r4
 
@@ -36,11 +35,6 @@ jobs:
         run: |
           ./scripts/feeds update -a
           ./scripts/feeds install -a
-      - name: Apply Multiple PPE Patch
-        run: |
-          mv custom_repo/patches/BPI-r4/${{ env.Multiple_PPE_PATCH }} target/linux/mediatek/patches-6.6/${{ env.Multiple_PPE_PATCH }}
-          cd target/linux/mediatek/patches-6.6
-          git apply ${{ env.Multiple_PPE_PATCH }}
       - name: Configure firmware image
         run: |
           mv custom_repo/${{ env.CONFIG_FILE }} .config

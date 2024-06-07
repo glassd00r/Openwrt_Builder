@@ -1,8 +1,25 @@
+From 00e91d9db2d84e766633bbd627e4204778db0265 Mon Sep 17 00:00:00 2001
+From: Elad Yifee <eladwf@gmail.com>
+Date: Tue, 30 Jan 2024 14:22:22 +0200
+Subject: [PATCH v6] net: ethernet: mtk_eth_soc: ppe: add support for multiple PPEs
+
+Add the missing pieces to allow multiple PPEs units, one for each GMAC.
+mtk_gdm_config has been modified to work on targted mac ID,
+the inner loop moved outside of the function to allow unrelated
+operations like setting the MAC's PPE index.
+
+Signed-off-by: Elad Yifee <eladwf@gmail.com>
+---
+ drivers/net/ethernet/mediatek/mtk_eth_soc.c   | 112 +++++++++++-------
+ drivers/net/ethernet/mediatek/mtk_eth_soc.h   |   8 +-
+ .../net/ethernet/mediatek/mtk_ppe_offload.c   |  17 ++-
+ 3 files changed, 92 insertions(+), 45 deletions(-)
+
 diff --git a/drivers/net/ethernet/mediatek/mtk_eth_soc.c b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
 index cae46290a7ae..ef0c1cca03d1 100644
 --- a/drivers/net/ethernet/mediatek/mtk_eth_soc.c
 +++ b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
-@@ -80,7 +80,9 @@  static const struct mtk_reg_map mtk_reg_map = {
+@@ -80,7 +80,9 @@ static const struct mtk_reg_map mtk_reg_map = {
  		.fq_blen	= 0x1b2c,
  	},
  	.gdm1_cnt		= 0x2400,
@@ -13,7 +30,7 @@ index cae46290a7ae..ef0c1cca03d1 100644
  	.ppe_base		= 0x0c00,
  	.wdma_base = {
  		[0]		= 0x2800,
-@@ -144,7 +146,10 @@  static const struct mtk_reg_map mt7986_reg_map = {
+@@ -144,7 +146,10 @@ static const struct mtk_reg_map mt7986_reg_map = {
  		.tx_sch_rate	= 0x4798,
  	},
  	.gdm1_cnt		= 0x1c00,
@@ -25,7 +42,7 @@ index cae46290a7ae..ef0c1cca03d1 100644
  	.ppe_base		= 0x2000,
  	.wdma_base = {
  		[0]		= 0x4800,
-@@ -192,7 +197,11 @@  static const struct mtk_reg_map mt7988_reg_map = {
+@@ -192,7 +197,11 @@ static const struct mtk_reg_map mt7988_reg_map = {
  		.tx_sch_rate	= 0x4798,
  	},
  	.gdm1_cnt		= 0x1c00,
@@ -38,7 +55,7 @@ index cae46290a7ae..ef0c1cca03d1 100644
  	.ppe_base		= 0x2000,
  	.wdma_base = {
  		[0]		= 0x4800,
-@@ -2009,6 +2018,7 @@  static int mtk_poll_rx(struct napi_struct *napi, int budget,
+@@ -2009,6 +2018,7 @@ static int mtk_poll_rx(struct napi_struct *napi, int budget,
  	struct mtk_rx_dma_v2 *rxd, trxd;
  	int done = 0, bytes = 0;
  	dma_addr_t dma_addr = DMA_MAPPING_ERROR;
@@ -46,7 +63,7 @@ index cae46290a7ae..ef0c1cca03d1 100644
  
  	while (done < budget) {
  		unsigned int pktlen, *rxdcsum;
-@@ -2052,6 +2062,7 @@  static int mtk_poll_rx(struct napi_struct *napi, int budget,
+@@ -2052,6 +2062,7 @@ static int mtk_poll_rx(struct napi_struct *napi, int budget,
  			goto release_desc;
  
  		netdev = eth->netdev[mac];
@@ -54,7 +71,7 @@ index cae46290a7ae..ef0c1cca03d1 100644
  
  		if (unlikely(test_bit(MTK_RESETTING, &eth->state)))
  			goto release_desc;
-@@ -2175,7 +2186,7 @@  static int mtk_poll_rx(struct napi_struct *napi, int budget,
+@@ -2175,7 +2186,7 @@ static int mtk_poll_rx(struct napi_struct *napi, int budget,
  		}
  
  		if (reason == MTK_PPE_CPU_REASON_HIT_UNBIND_RATE_REACHED)
@@ -63,7 +80,7 @@ index cae46290a7ae..ef0c1cca03d1 100644
  
  		skb_record_rx_queue(skb, 0);
  		napi_gro_receive(napi, skb);
-@@ -3266,37 +3277,27 @@  static int mtk_start_dma(struct mtk_eth *eth)
+@@ -3266,37 +3277,27 @@ static int mtk_start_dma(struct mtk_eth *eth)
  	return 0;
  }
  
@@ -112,7 +129,7 @@ index cae46290a7ae..ef0c1cca03d1 100644
  }
  
  
-@@ -3356,7 +3357,10 @@  static int mtk_open(struct net_device *dev)
+@@ -3356,7 +3357,10 @@ static int mtk_open(struct net_device *dev)
  {
  	struct mtk_mac *mac = netdev_priv(dev);
  	struct mtk_eth *eth = mac->hw;
@@ -124,7 +141,7 @@ index cae46290a7ae..ef0c1cca03d1 100644
  
  	err = phylink_of_phy_connect(mac->phylink, mac->of_node, 0);
  	if (err) {
-@@ -3380,18 +3384,38 @@  static int mtk_open(struct net_device *dev)
+@@ -3380,18 +3384,38 @@ static int mtk_open(struct net_device *dev)
  		for (i = 0; i < ARRAY_SIZE(eth->ppe); i++)
  			mtk_ppe_start(eth->ppe[i]);
  
@@ -168,7 +185,7 @@ index cae46290a7ae..ef0c1cca03d1 100644
  
  	phylink_start(mac->phylink);
  	netif_tx_start_all_queues(dev);
-@@ -3468,7 +3492,8 @@  static int mtk_stop(struct net_device *dev)
+@@ -3468,7 +3492,8 @@ static int mtk_stop(struct net_device *dev)
  	if (!refcount_dec_and_test(&eth->dma_refcnt))
  		return 0;
  
@@ -178,7 +195,7 @@ index cae46290a7ae..ef0c1cca03d1 100644
  
  	mtk_tx_irq_disable(eth, MTK_TX_DONE_INT);
  	mtk_rx_irq_disable(eth, eth->soc->rx.irq_done_mask);
-@@ -4949,23 +4974,24 @@  static int mtk_probe(struct platform_device *pdev)
+@@ -4949,23 +4974,24 @@ static int mtk_probe(struct platform_device *pdev)
  	}
  
  	if (eth->soc->offload_version) {
@@ -211,7 +228,7 @@ index cae46290a7ae..ef0c1cca03d1 100644
  	}
  
  	for (i = 0; i < MTK_MAX_DEVS; i++) {
-@@ -5070,6 +5096,7 @@  static const struct mtk_soc_data mt7621_data = {
+@@ -5070,6 +5096,7 @@ static const struct mtk_soc_data mt7621_data = {
  	.required_pctl = false,
  	.version = 1,
  	.offload_version = 1,
@@ -219,7 +236,7 @@ index cae46290a7ae..ef0c1cca03d1 100644
  	.hash_offset = 2,
  	.foe_entry_size = MTK_FOE_ENTRY_V1_SIZE,
  	.tx = {
-@@ -5095,6 +5122,7 @@  static const struct mtk_soc_data mt7622_data = {
+@@ -5095,6 +5122,7 @@ static const struct mtk_soc_data mt7622_data = {
  	.required_pctl = false,
  	.version = 1,
  	.offload_version = 2,
@@ -227,7 +244,7 @@ index cae46290a7ae..ef0c1cca03d1 100644
  	.hash_offset = 2,
  	.has_accounting = true,
  	.foe_entry_size = MTK_FOE_ENTRY_V1_SIZE,
-@@ -5120,6 +5148,7 @@  static const struct mtk_soc_data mt7623_data = {
+@@ -5120,6 +5148,7 @@ static const struct mtk_soc_data mt7623_data = {
  	.required_pctl = true,
  	.version = 1,
  	.offload_version = 1,
@@ -235,7 +252,7 @@ index cae46290a7ae..ef0c1cca03d1 100644
  	.hash_offset = 2,
  	.foe_entry_size = MTK_FOE_ENTRY_V1_SIZE,
  	.disable_pll_modes = true,
-@@ -5169,6 +5198,7 @@  static const struct mtk_soc_data mt7981_data = {
+@@ -5169,6 +5198,7 @@ static const struct mtk_soc_data mt7981_data = {
  	.required_pctl = false,
  	.version = 2,
  	.offload_version = 2,
@@ -243,7 +260,7 @@ index cae46290a7ae..ef0c1cca03d1 100644
  	.hash_offset = 4,
  	.has_accounting = true,
  	.foe_entry_size = MTK_FOE_ENTRY_V2_SIZE,
-@@ -5195,6 +5225,7 @@  static const struct mtk_soc_data mt7986_data = {
+@@ -5195,6 +5225,7 @@ static const struct mtk_soc_data mt7986_data = {
  	.required_pctl = false,
  	.version = 2,
  	.offload_version = 2,
@@ -251,7 +268,7 @@ index cae46290a7ae..ef0c1cca03d1 100644
  	.hash_offset = 4,
  	.has_accounting = true,
  	.foe_entry_size = MTK_FOE_ENTRY_V2_SIZE,
-@@ -5221,6 +5252,7 @@  static const struct mtk_soc_data mt7988_data = {
+@@ -5221,6 +5252,7 @@ static const struct mtk_soc_data mt7988_data = {
  	.required_pctl = false,
  	.version = 3,
  	.offload_version = 2,
@@ -260,10 +277,10 @@ index cae46290a7ae..ef0c1cca03d1 100644
  	.has_accounting = true,
  	.foe_entry_size = MTK_FOE_ENTRY_V3_SIZE,
 diff --git a/drivers/net/ethernet/mediatek/mtk_eth_soc.h b/drivers/net/ethernet/mediatek/mtk_eth_soc.h
-index 4eab30b44070..7d3d4b0c0b4a 100644
+index 4eab30b44070..4b5863b68822 100644
 --- a/drivers/net/ethernet/mediatek/mtk_eth_soc.h
 +++ b/drivers/net/ethernet/mediatek/mtk_eth_soc.h
-@@ -1130,7 +1130,7 @@  struct mtk_reg_map {
+@@ -1130,7 +1130,7 @@ struct mtk_reg_map {
  		u32	tx_sch_rate;	/* tx scheduler rate control registers */
  	} qdma;
  	u32	gdm1_cnt;
@@ -272,7 +289,7 @@ index 4eab30b44070..7d3d4b0c0b4a 100644
  	u32	ppe_base;
  	u32	wdma_base[3];
  	u32	pse_iq_sta;
-@@ -1168,6 +1168,7 @@  struct mtk_soc_data {
+@@ -1168,6 +1168,7 @@ struct mtk_soc_data {
  	u8		offload_version;
  	u8		hash_offset;
  	u8		version;
@@ -280,7 +297,7 @@ index 4eab30b44070..7d3d4b0c0b4a 100644
  	u16		foe_entry_size;
  	netdev_features_t hw_features;
  	bool		has_accounting;
-@@ -1289,7 +1290,7 @@  struct mtk_eth {
+@@ -1289,7 +1290,7 @@ struct mtk_eth {
  
  	struct metadata_dst		*dsa_meta[MTK_MAX_DSA_PORTS];
  
@@ -289,15 +306,15 @@ index 4eab30b44070..7d3d4b0c0b4a 100644
  	struct rhashtable		flow_table;
  
  	struct bpf_prog			__rcu *prog;
-@@ -1313,6 +1314,7 @@  struct mtk_eth {
-  */
+@@ -1314,6 +1315,7 @@ struct mtk_eth {
  struct mtk_mac {
  	int				id;
-+	u8				ppe_idx;
  	phy_interface_t			interface;
++	u8				ppe_idx;
  	int				speed;
  	struct device_node		*of_node;
-@@ -1435,7 +1437,7 @@  int mtk_gmac_sgmii_path_setup(struct mtk_eth *eth, int mac_id);
+ 	struct phylink			*phylink;
+@@ -1435,7 +1437,7 @@ int mtk_gmac_sgmii_path_setup(struct mtk_eth *eth, int mac_id);
  int mtk_gmac_gephy_path_setup(struct mtk_eth *eth, int mac_id);
  int mtk_gmac_rgmii_path_setup(struct mtk_eth *eth, int mac_id);
  
@@ -310,7 +327,7 @@ diff --git a/drivers/net/ethernet/mediatek/mtk_ppe_offload.c b/drivers/net/ether
 index aa262e6f4b85..f80af73d0a1b 100644
 --- a/drivers/net/ethernet/mediatek/mtk_ppe_offload.c
 +++ b/drivers/net/ethernet/mediatek/mtk_ppe_offload.c
-@@ -245,10 +245,10 @@  mtk_flow_offload_replace(struct mtk_eth *eth, struct flow_cls_offload *f,
+@@ -245,10 +245,10 @@ mtk_flow_offload_replace(struct mtk_eth *eth, struct flow_cls_offload *f,
  			 int ppe_index)
  {
  	struct flow_rule *rule = flow_cls_offload_flow_rule(f);
@@ -322,7 +339,7 @@ index aa262e6f4b85..f80af73d0a1b 100644
  	struct mtk_flow_entry *entry;
  	int offload_type = 0;
  	int wed_index = -1;
-@@ -264,6 +264,17 @@  mtk_flow_offload_replace(struct mtk_eth *eth, struct flow_cls_offload *f,
+@@ -264,6 +264,17 @@ mtk_flow_offload_replace(struct mtk_eth *eth, struct flow_cls_offload *f,
  		struct flow_match_meta match;
  
  		flow_rule_match_meta(rule, &match);
@@ -340,7 +357,7 @@ index aa262e6f4b85..f80af73d0a1b 100644
  	} else {
  		return -EOPNOTSUPP;
  	}
-@@ -637,7 +648,9 @@  int mtk_eth_setup_tc(struct net_device *dev, enum tc_setup_type type,
+@@ -637,7 +648,9 @@ int mtk_eth_setup_tc(struct net_device *dev, enum tc_setup_type type,
  	}
  }
  
@@ -351,4 +368,5 @@ index aa262e6f4b85..f80af73d0a1b 100644
 +		return 0;
  	return rhashtable_init(&eth->flow_table, &mtk_flow_ht_params);
  }
-
+-- 
+2.45.1

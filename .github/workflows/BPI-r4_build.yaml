@@ -36,7 +36,7 @@ jobs:
         run: |
           ./scripts/feeds update -a
           ./scripts/feeds install -a
-        - name: Apply Multiple PPE Patch
+      - name: Apply Multiple PPE Patch
         run: |
           mv custom_repo/patches/BPI-r4/${{ env.Multiple_PPE_PATCH }} target/linux/mediatek/patches-6.6/${{ env.Multiple_PPE_PATCH }}
           cd target/linux/mediatek/patches-6.6

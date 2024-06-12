@@ -112,7 +112,7 @@ jobs:
         with:
           files: bin/targets/qualcommax/ipq807x/*
           tag_name: ${{ env.RELEASE_PREFIX }}-${{ env.RELEASE_DATE }}
-          name: Updated prebuilt images ${{ env.RELEASE_DATE }}
+          name: Openwrt AX3600 images ${{ env.RELEASE_DATE }}
           body: |
             Updated prebuilt images for ${{ env.RELEASE_DATE }}
             Build Commit: ${{ needs.check_commits.outputs.latest_commit_sha }}

@@ -1,0 +1,26 @@
+From 06748d507c7b2b431761f21dd71b4ec4f7841c90 Mon Sep 17 00:00:00 2001
+From: Elad Yifee <eladwf@gmail.com>
+Date: Sun, 16 Jun 2024 16:26:48 +0300
+Subject: [PATCH] change ppe entries num to 32K
+
+Signed-off-by: Elad Yifee <eladwf@gmail.com>
+---
+ drivers/net/ethernet/mediatek/mtk_ppe.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/net/ethernet/mediatek/mtk_ppe.h b/drivers/net/ethernet/mediatek/mtk_ppe.h
+index 691806bca372..6db85d897fa9 100644
+--- a/drivers/net/ethernet/mediatek/mtk_ppe.h
++++ b/drivers/net/ethernet/mediatek/mtk_ppe.h
+@@ -8,7 +8,7 @@
+ #include <linux/bitfield.h>
+ #include <linux/rhashtable.h>
+ 
+-#define MTK_PPE_ENTRIES_SHIFT		3
++#define MTK_PPE_ENTRIES_SHIFT		5
+ #define MTK_PPE_ENTRIES			(1024 << MTK_PPE_ENTRIES_SHIFT)
+ #define MTK_PPE_HASH_MASK		(MTK_PPE_ENTRIES - 1)
+ #define MTK_PPE_WAIT_TIMEOUT_US		1000000
+-- 
+2.45.1
+

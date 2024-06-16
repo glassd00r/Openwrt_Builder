@@ -7,7 +7,7 @@ env:
   REMOTE_REPOSITORY: glassd00r/openwrt
   REMOTE_BRANCH: main
   CONFIG_FILE: bpi-r4.config
-  32K_PPE_PATCH: 001-32k_ppe.patch
+  MTK_PPE_ENTRIES_SHIFT_PATCH: 001-32k_ppe.patch
   CUSTOM_FILES_PATH: files/
   RELEASE_PREFIX: Mediatek_mt7988a_bpi-r4
 
@@ -39,9 +39,9 @@ jobs:
           ./scripts/feeds install -a
       - name: Apply 32K PPE Patch
         run: |
-          mv custom_repo/patches/BPI-r4/${{ env.32K_PPE_PATCH }} target/linux/mediatek/patches-6.6/${{ env.32K_PPE_PATCH }}
+          mv custom_repo/patches/BPI-r4/${{ env.MTK_PPE_ENTRIES_SHIFT_PATCH }} target/linux/mediatek/patches-6.6/${{ env.MTK_PPE_ENTRIES_SHIFT_PATCH }}
           cd target/linux/mediatek/patches-6.6
-          git apply ${{ env.32K_PPE_PATCH }}
+          git apply ${{ env.MTK_PPE_ENTRIES_SHIFT_PATCH }}
       - name: Configure firmware image
         run: |
           mv custom_repo/${{ env.CONFIG_FILE }} .config

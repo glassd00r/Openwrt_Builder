@@ -1,2 +1,3 @@
 uci -q batch << EOI
+set pbuf.opt.memory_profile='1gb'
 EOI

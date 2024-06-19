@@ -4,8 +4,8 @@ on:
   workflow_dispatch:
 
 env:
-  REMOTE_REPOSITORY: glassd00r/dango_openwrt_staging
-  REMOTE_BRANCH: main
+  REMOTE_REPOSITORY: glassd00r/immortalwrt-mt798x
+  REMOTE_BRANCH: mt7988
   CONFIG_FILE: mtk-bpi-r4.config
   CUSTOM_FILES_PATH: files/
   RELEASE_PREFIX: MTK_BPI-r4
@@ -42,7 +42,7 @@ jobs:
       - name: Build the firmware image
         run: make download world V=s -j$(nproc)
       - name: Package output
-        run: tar -cvf mtk_bpi_r4-images.tar bin/targets/mediatek/filogic
+        run: tar -cvf mtk_bpi_r4-images.tar bin/targets/mediatek/mt7988
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:

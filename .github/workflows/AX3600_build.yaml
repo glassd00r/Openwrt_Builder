@@ -13,7 +13,7 @@ env:
 jobs:
   build:
     name: Build OpenWrt
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - name: Install dependencies
         run: |
@@ -64,7 +64,7 @@ jobs:
     name: Create release
     needs: [build]
     if: needs.build.result == 'success'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - name: Download artifacts
         uses: actions/download-artifact@v4

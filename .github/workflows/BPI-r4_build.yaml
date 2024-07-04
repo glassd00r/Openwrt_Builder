@@ -45,15 +45,13 @@ jobs:
       - name: Configure firmware image
         run: |
           mv custom_repo/${{ env.CONFIG_FILE }} .config
-          make defconfig -j$(nproc)
+          make defconfig
       - name: Include custom files
         run: |
           mkdir -p ${{ env.CUSTOM_FILES_PATH }}
           mv custom_repo/BPI-r4/${{ env.CUSTOM_FILES_PATH }}* ${{ env.CUSTOM_FILES_PATH }}
-      - name: Download dependencies
-        run: make download V=sc -j$(nproc)
       - name: Build the firmware image
-        run: make world V=sc -j$(nproc)
+        run: make -j $(nproc) download world
       - name: Package output
         run: tar -cvf bpi_r4-images.tar bin/targets/mediatek/filogic
       - name: Upload artifacts

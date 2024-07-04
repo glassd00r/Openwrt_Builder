@@ -43,7 +43,7 @@ jobs:
           ./scripts/feeds install -a
       - name: Apply NSS Status patch
         run: |
-          mv custom_repo/patches/${{ env.NSS_STATUS_PATCH }} feeds/luci/${{ env.NSS_STATUS_PATCH }}
+          mv custom_repo/patches/AX3600/${{ env.NSS_STATUS_PATCH }} feeds/luci/${{ env.NSS_STATUS_PATCH }}
           cd feeds/luci
           git apply ${{ env.NSS_STATUS_PATCH }}
       - name: Configure firmware image

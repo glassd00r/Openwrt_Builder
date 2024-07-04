@@ -7,6 +7,7 @@ env:
   REMOTE_REPOSITORY: qosmio/openwrt-ipq
   REMOTE_BRANCH: qualcommax-6.x-nss-wifi
   CONFIG_FILE: ax3600.config
+  NSS_STATUS_PATCH: 999-add-nss-load-to-status.patch
   CUSTOM_FILES_PATH: files/
   RELEASE_PREFIX: qualcommax-6.x-nss-wifi
 
@@ -40,6 +41,11 @@ jobs:
         run: |
           ./scripts/feeds update -a
           ./scripts/feeds install -a
+      - name: Apply NSS Status patch
+        run: |
+          mv custom_repo/patches/${{ env.NSS_STATUS_PATCH }} feeds/luci/${{ env.NSS_STATUS_PATCH }}
+          cd feeds/luci
+          git apply ${{ env.NSS_STATUS_PATCH }}
       - name: Configure firmware image
         run: |
           mv custom_repo/${{ env.CONFIG_FILE }} .config

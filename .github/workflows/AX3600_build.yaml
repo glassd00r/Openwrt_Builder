@@ -54,10 +54,8 @@ jobs:
         run: |
           mkdir -p ${{ env.CUSTOM_FILES_PATH }}
           mv custom_repo/AX3600/${{ env.CUSTOM_FILES_PATH }}* ${{ env.CUSTOM_FILES_PATH }}
-      - name: Download dependencies
-        run: make -j5 download
       - name: Build the firmware image
-        run: make -j5 world
+        run: make -j5 download world
       - name: Package output
         run: tar -cvf ipq807xx-images.tar bin/targets/qualcommax/ipq807x
       - name: Upload artifacts

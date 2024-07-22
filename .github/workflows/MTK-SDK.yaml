@@ -4,8 +4,7 @@ on:
   workflow_dispatch:
 
 env:
-  REMOTE_REPOSITORY: glassd00r/openwrt
-  REMOTE_BRANCH: main
+  REMOTE_REPOSITORY: https://git.openwrt.org/openwrt/openwrt.git
   CONFIG_FILE: mtk-sdk.config
   MTK_PPE_ENTRIES_SHIFT_PATCH: 001-32k_ppe.patch
   CUSTOM_FILES_PATH: files/
@@ -35,6 +34,8 @@ jobs:
           path: "custom_repo"
       - name: Update and install feeds
         run: |
+          cd openwrt
+          echo "src-git mtk_openwrt_feed https://git01.mediatek.com/openwrt/feeds/mtk-openwrt-feeds" >> feeds.conf.default
           ./scripts/feeds update -a
           ./scripts/feeds install -a
       - name: Apply MediaTek OpenWrt files and patches

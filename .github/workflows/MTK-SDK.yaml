@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
 
 env:
-  REMOTE_REPOSITORY: https://git.openwrt.org/openwrt/openwrt.git
+  REMOTE_REPOSITORY: openwrt/openwrt
   CONFIG_FILE: mtk-sdk.config
   MTK_PPE_ENTRIES_SHIFT_PATCH: 001-32k_ppe.patch
   CUSTOM_FILES_PATH: files/

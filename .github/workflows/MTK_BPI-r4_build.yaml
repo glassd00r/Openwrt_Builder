@@ -1,4 +1,4 @@
-name: Build MTK_SDK 21.02 for bpi-r4 and release
+name: MTK_SDK 21.02 for bpi-r4 and release
 
 on:
   workflow_dispatch:

@@ -4,9 +4,8 @@ on:
   workflow_dispatch:
 
 env:
-  REMOTE_REPOSITORY: glassd00r/openwrt
+  REMOTE_REPOSITORY: openwrt/openwrt
   CONFIG_FILE: mtk-sdk.config
-  MTK_PPE_ENTRIES_SHIFT_PATCH: 001-32k_ppe.patch
   CUSTOM_FILES_PATH: files/
   RELEASE_PREFIX: Mediatek_SDK
 
@@ -34,6 +33,7 @@ jobs:
           path: "custom_repo"
       - name: Update and install feeds
         run: |
+          echo "src-git mtk_openwrt_feed https://git01.mediatek.com/openwrt/feeds/mtk-openwrt-feeds" >> feeds.conf.default
           ./scripts/feeds update -a
           ./scripts/feeds install -a
       - name: Apply MediaTek OpenWrt files and patches
@@ -41,11 +41,6 @@ jobs:
         run: |
           cp -af ./feeds/mtk_openwrt_feed/master/files/* .
           for file in $(find ./feeds/mtk_openwrt_feed/master/patches-base -name "*.patch" | sort); do patch -f -p1 -i ${file}; done
-      - name: Apply 32K PPE Patch
-        run: |
-          mv custom_repo/patches/BPI-r4/${{ env.MTK_PPE_ENTRIES_SHIFT_PATCH }} target/linux/mediatek/patches-6.6/${{ env.MTK_PPE_ENTRIES_SHIFT_PATCH }}
-          cd target/linux/mediatek/patches-6.6
-          git apply ${{ env.MTK_PPE_ENTRIES_SHIFT_PATCH }}
       - name: Configure firmware image
         run: |
           mv custom_repo/${{ env.CONFIG_FILE }} .config

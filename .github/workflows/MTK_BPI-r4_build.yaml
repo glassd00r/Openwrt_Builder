@@ -1,4 +1,4 @@
-name: Build MTK feeds OpenWrt 21.02 for bpi-r4 and release
+name: Build MTK_SDK 21.02 for bpi-r4 and release
 
 on:
   workflow_dispatch:
@@ -68,7 +68,7 @@ jobs:
         with:
           files: bin/targets/mediatek/mt7988/*
           tag_name: ${{ env.RELEASE_PREFIX }}-${{ env.RELEASE_DATE }}
-          name: MTK Openwrt 21.02 BPI-r4 ${{ env.RELEASE_DATE }}
+          name: MTK_SDK 21.02 BPI-r4 ${{ env.RELEASE_DATE }}
           body: |
             Updated prebuilt images for ${{ env.RELEASE_DATE }}
             Build Commit: ${{ needs.check_commits.outputs.latest_commit_sha }}

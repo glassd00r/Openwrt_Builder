@@ -1,12 +1,13 @@
-name: MTK_SDK Master for bpi-r4 and release
+name: MTK_SDK 21.02 for bpi-r4 and release
 on:
   workflow_dispatch:
 
 env:
   REMOTE_REPOSITORY: openwrt/openwrt
-  CONFIG_FILE: mtk-sdk.config
+  REMOTE_BRANCH: openwrt-21.02
+  CONFIG_FILE: mtk-sdk-2102.config
   CUSTOM_FILES_PATH: files/
-  RELEASE_PREFIX: Mediatek_SDK
+  RELEASE_PREFIX: Mediatek_SDK_2102
 
 jobs:  
   build:
@@ -38,8 +39,10 @@ jobs:
       - name: Apply MediaTek OpenWrt files and patches
         shell: bash {0}
         run: |
-          cp -af ./feeds/mtk_openwrt_feed/master/files/* .
-          for file in $(find ./feeds/mtk_openwrt_feed/master/patches-base -name "*.patch" | sort); do patch -f -p1 -i ${file}; done
+          cp -af ./feeds/mtk_openwrt_feed/21.02/files/* .
+          cp -af ./feeds/mtk_openwrt_feed/tools .
+          for file in $(find ./feeds/mtk_openwrt_feed/21.02/patches-base -name "*.patch" | sort); do patch -f -p1 -i ${file}; done
+          for file in $(find ./feeds/mtk_openwrt_feed/21.02/patches-feeds -name "*.patch" | sort); do patch -f -p1 -i ${file}; done
       - name: Configure firmware image
         run: |
           mv custom_repo/${{ env.CONFIG_FILE }} .config
@@ -53,7 +56,7 @@ jobs:
       - name: Build the firmware image
         run: make -j $(($(nproc)+1)) world
       - name: Package output
-        run: tar -cvf bpi_r4-images.tar bin/targets/mediatek/filogic
+        run: tar -cvf bpi_r4-images.tar bin/targets/mediatek/mt7988
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -79,7 +82,7 @@ jobs:
         with:
           files: bin/targets/mediatek/filogic/*
           tag_name: ${{ env.RELEASE_PREFIX }}-${{ env.RELEASE_DATE }}
-          name: MTK_SDK BPI-r4 ${{ env.RELEASE_DATE }}
+          name: MTK_SDK_21.02 BPI-r4 ${{ env.RELEASE_DATE }}
           body: |
             Updated prebuilt images for ${{ env.RELEASE_DATE }}
             Build Commit: ${{ needs.check_commits.outputs.latest_commit_sha }}

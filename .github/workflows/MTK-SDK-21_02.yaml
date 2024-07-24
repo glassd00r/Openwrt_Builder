@@ -33,16 +33,8 @@ jobs:
           path: "custom_repo"
       - name: Update and install feeds
         run: |
-          echo "src-git mtk_openwrt_feed https://git01.mediatek.com/openwrt/feeds/mtk-openwrt-feeds" >> feeds.conf.default
           ./scripts/feeds update -a
           ./scripts/feeds install -a
-      - name: Apply MediaTek OpenWrt files and patches
-        shell: bash {0}
-        run: |
-          cp -af ./feeds/mtk_openwrt_feed/21.02/files/* .
-          cp -af ./feeds/mtk_openwrt_feed/tools .
-          for file in $(find ./feeds/mtk_openwrt_feed/21.02/patches-base -name "*.patch" | sort); do patch -f -p1 -i ${file}; done
-          for file in $(find ./feeds/mtk_openwrt_feed/21.02/patches-feeds -name "*.patch" | sort); do patch -f -p1 -i ${file}; done
       - name: Configure firmware image
         run: |
           mv custom_repo/${{ env.CONFIG_FILE }} .config

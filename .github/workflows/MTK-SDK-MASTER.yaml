@@ -4,7 +4,6 @@ on:
 
 env:
   REMOTE_REPOSITORY: openwrt/openwrt
-  REMOTE_BRANCH: master
   CONFIG_FILE: mtk-sdk.config
   CUSTOM_FILES_PATH: files/
   RELEASE_PREFIX: Mediatek_SDK

@@ -4,8 +4,8 @@ on:
   workflow_dispatch:
 
 env:
-  REMOTE_REPOSITORY: openwrt/openwrt
-  REMOTE_BRANCH: openwrt-21.02
+  REMOTE_REPOSITORY: glassd00r/immortalwrt-mt798x
+  REMOTE_BRANCH: mt7988
   CONFIG_FILE: mtk-sdk-2102.config
   CUSTOM_FILES_PATH: files/
   RELEASE_PREFIX: Mediatek_SDK_2102

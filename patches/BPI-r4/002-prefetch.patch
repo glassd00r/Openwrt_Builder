@@ -31,7 +31,7 @@ index 0cc2dd85652f..1a0704166103 100644
  				goto skip_rx;
  			}
  
-+			net_prefetchw(skb->data);
++			net_prefetchw(skb.data);
  			skb_reserve(skb, xdp.data - xdp.data_hard_start);
  			skb_put(skb, xdp.data_end - xdp.data);
  			skb_mark_for_recycle(skb);
@@ -47,7 +47,7 @@ index 0cc2dd85652f..1a0704166103 100644
  				goto skip_rx;
  			}
  
-+			net_prefetchw(skb->data);
++			net_prefetchw(skb.data);
  			skb_reserve(skb, NET_SKB_PAD + NET_IP_ALIGN);
  			skb_put(skb, pktlen);
  		}

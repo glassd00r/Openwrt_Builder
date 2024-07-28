@@ -6,7 +6,7 @@ index 0cc2dd85652f..1a0704166103 100644
  	if (!prog)
  		goto out;
  
-+	prefetchw(xdp->data_hard_start);
++	prefetch(xdp->data_hard_start);
  	act = bpf_prog_run_xdp(prog, xdp);
  	switch (act) {
  	case XDP_PASS:
@@ -31,7 +31,7 @@ index 0cc2dd85652f..1a0704166103 100644
  				goto skip_rx;
  			}
  
-+			prefetchw(skb->data);
++			prefetch(skb->data);
  			skb_reserve(skb, xdp.data - xdp.data_hard_start);
  			skb_put(skb, xdp.data_end - xdp.data);
  			skb_mark_for_recycle(skb);
@@ -47,7 +47,7 @@ index 0cc2dd85652f..1a0704166103 100644
  				goto skip_rx;
  			}
  
-+			prefetchw(skb->data);
++			prefetch(skb->data);
  			skb_reserve(skb, NET_SKB_PAD + NET_IP_ALIGN);
  			skb_put(skb, pktlen);
  		}

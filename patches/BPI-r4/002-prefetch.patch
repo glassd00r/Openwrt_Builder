@@ -14,7 +14,7 @@ index 0cc2dd85652f..1a0704166103 100644
  		idx = NEXT_DESP_IDX(ring->calc_idx, ring->dma_size);
  		rxd = ring->dma + idx * eth->soc->rx.desc_size;
  		data = ring->data[idx];
--
+
 +		net_prefetch(rxd);
  		if (!mtk_rx_get_desc(eth, &trxd, rxd))
  			break;

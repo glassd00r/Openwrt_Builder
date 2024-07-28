@@ -8,6 +8,7 @@ env:
   REMOTE_BRANCH: main
   CONFIG_FILE: bpi-r4.config
   MTK_PPE_ENTRIES_SHIFT_PATCH: 001-32k_ppe.patch
+  PREFETCH_PATCH: 002-prefetch.patch
   CUSTOM_FILES_PATH: files/
   RELEASE_PREFIX: Mediatek_mt7988a_bpi-r4
 

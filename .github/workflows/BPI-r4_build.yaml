@@ -42,6 +42,11 @@ jobs:
           mv custom_repo/patches/BPI-r4/${{ env.MTK_PPE_ENTRIES_SHIFT_PATCH }} target/linux/mediatek/patches-6.6/${{ env.MTK_PPE_ENTRIES_SHIFT_PATCH }}
           cd target/linux/mediatek/patches-6.6
           git apply ${{ env.MTK_PPE_ENTRIES_SHIFT_PATCH }}
+      - name: Apply PREFETCH Patch
+        run: |
+          mv custom_repo/patches/BPI-r4/${{ env.PREFETCH_PATCH }} target/linux/mediatek/patches-6.6/${{ env.PREFETCH_PATCH }}
+          cd target/linux/mediatek/patches-6.6
+          git apply ${{ env.PREFETCH_PATCH }}
       - name: Configure firmware image
         run: |
           mv custom_repo/${{ env.CONFIG_FILE }} .config

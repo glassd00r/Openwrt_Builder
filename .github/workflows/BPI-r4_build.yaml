@@ -43,7 +43,7 @@ jobs:
         run: |
           mv custom_repo/patches/BPI-r4/${{ env.MTK_PPE_ENTRIES_SHIFT_PATCH }} target/linux/mediatek/patches-6.6/${{ env.MTK_PPE_ENTRIES_SHIFT_PATCH }}
           cd target/linux/mediatek/patches-6.6
-          patch -f -p1 -i ${{ env.MTK_PPE_ENTRIES_SHIFT_PATCH }}
+          patch -f -u -i ${{ env.MTK_PPE_ENTRIES_SHIFT_PATCH }}
       - name: Configure firmware image
         run: |
           mv custom_repo/${{ env.CONFIG_FILE }} .config

@@ -6,7 +6,7 @@ index 16ca427cf4c3..4d0052dbe3f4 100644
  	if (!prog)
  		goto out;
  
-+	net_prefetchw(xdp->data_hard_start);
++	net_prefetchw(xdp.data_hard_start);
  	act = bpf_prog_run_xdp(prog, xdp);
  	switch (act) {
  	case XDP_PASS:

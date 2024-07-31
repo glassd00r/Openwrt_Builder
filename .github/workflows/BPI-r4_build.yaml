@@ -39,9 +39,6 @@ jobs:
         run: |
           ./scripts/feeds update -a
           ./scripts/feeds install -a
-      - name: Apply Local Patches
-        run: |
-          for file in $(find custom_repo/patches/BPI-r4 -name "*.patch" | sort); do patch -f -p1 -i ${file}; done
       - name: Apply 32K PPE Patch
         run: |
           mv custom_repo/patches/BPI-r4/${{ env.MTK_PPE_ENTRIES_SHIFT_PATCH }} target/linux/mediatek/patches-6.6/${{ env.MTK_PPE_ENTRIES_SHIFT_PATCH }}

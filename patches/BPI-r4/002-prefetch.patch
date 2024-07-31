@@ -1,25 +1,24 @@
 diff --git a/drivers/net/ethernet/mediatek/mtk_eth_soc.c b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
-index 0cc2dd85652f..1a0704166103 100644
+index 16ca427cf4c3..4d0052dbe3f4 100644
 --- a/drivers/net/ethernet/mediatek/mtk_eth_soc.c
 +++ b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
 @@ -1963,6 +1963,7 @@  static u32 mtk_xdp_run(struct mtk_eth *eth, struct mtk_rx_ring *ring,
  	if (!prog)
  		goto out;
  
-+	net_prefetchw(xdp.data_hard_start);
++	net_prefetchw(xdp->data_hard_start);
  	act = bpf_prog_run_xdp(prog, xdp);
  	switch (act) {
  	case XDP_PASS:
-@@ -2039,7 +2040,7 @@  static int mtk_poll_rx(struct napi_struct *napi, int budget,
+@@ -2038,6 +2039,7 @@  static int mtk_poll_rx(struct napi_struct *napi, int budget,
+ 
  		idx = NEXT_DESP_IDX(ring->calc_idx, ring->dma_size);
  		rxd = ring->dma + idx * eth->soc->rx.desc_size;
- 		data = ring->data[idx];
--
 +		prefetch(rxd);
- 		if (!mtk_rx_get_desc(eth, &trxd, rxd))
- 			break;
+ 		data = ring->data[idx];
  
-@@ -2105,6 +2106,7 @@  static int mtk_poll_rx(struct napi_struct *napi, int budget,
+ 		if (!mtk_rx_get_desc(eth, &trxd, rxd))
+@@ -2105,6 +2107,7 @@  static int mtk_poll_rx(struct napi_struct *napi, int budget,
  			if (ret != XDP_PASS)
  				goto skip_rx;
  
@@ -27,7 +26,7 @@ index 0cc2dd85652f..1a0704166103 100644
  			skb = build_skb(data, PAGE_SIZE);
  			if (unlikely(!skb)) {
  				page_pool_put_full_page(ring->page_pool,
-@@ -2113,6 +2115,7 @@  static int mtk_poll_rx(struct napi_struct *napi, int budget,
+@@ -2113,6 +2116,7 @@  static int mtk_poll_rx(struct napi_struct *napi, int budget,
  				goto skip_rx;
  			}
  
@@ -35,20 +34,22 @@ index 0cc2dd85652f..1a0704166103 100644
  			skb_reserve(skb, xdp.data - xdp.data_hard_start);
  			skb_put(skb, xdp.data_end - xdp.data);
  			skb_mark_for_recycle(skb);
-@@ -2143,6 +2146,7 @@  static int mtk_poll_rx(struct napi_struct *napi, int budget,
+@@ -2143,6 +2147,7 @@  static int mtk_poll_rx(struct napi_struct *napi, int budget,
  			dma_unmap_single(eth->dma_dev, ((u64)trxd.rxd1 | addr64),
  					 ring->buf_size, DMA_FROM_DEVICE);
  
-+			net_prefetch(data);
++			net_prefetch(data + NET_SKB_PAD + eth->ip_align);
  			skb = build_skb(data, ring->frag_size);
  			if (unlikely(!skb)) {
  				netdev->stats.rx_dropped++;
-@@ -2150,6 +2154,7 @@  static int mtk_poll_rx(struct napi_struct *napi, int budget,
+@@ -2150,7 +2155,8 @@  static int mtk_poll_rx(struct napi_struct *napi, int budget,
  				goto skip_rx;
  			}
  
+-			skb_reserve(skb, NET_SKB_PAD + NET_IP_ALIGN);
 +			net_prefetchw(skb->data);
- 			skb_reserve(skb, NET_SKB_PAD + NET_IP_ALIGN);
++			skb_reserve(skb, NET_SKB_PAD + eth->ip_align);
  			skb_put(skb, pktlen);
  		}
+ 
 

@@ -39,15 +39,9 @@ jobs:
         run: |
           ./scripts/feeds update -a
           ./scripts/feeds install -a
-      - name: Apply 32K PPE Patch
+      - name: Apply Local Patches
         run: |
-          mv custom_repo/patches/BPI-r4/${{ env.MTK_PPE_ENTRIES_SHIFT_PATCH }} target/linux/mediatek/patches-6.6/${{ env.MTK_PPE_ENTRIES_SHIFT_PATCH }}
-      - name: Apply PREFETCH Patch
-        run: |
-          mv custom_repo/patches/BPI-r4/${{ env.PREFETCH_PATCH }} target/linux/mediatek/patches-6.6/${{ env.PREFETCH_PATCH }}
-      - name: Apply PP_XDP Patch
-        run: |
-          mv custom_repo/patches/BPI-r4/${{ env.PP_XDP_PATCH }} target/linux/mediatek/patches-6.6/${{ env.PP_XDP_PATCH }}
+          for file in $(find custom_repo/patches/BPI-r4 -name "*.patch" | sort); do patch -f -p1 -i ${file}; done
       - name: Configure firmware image
         run: |
           mv custom_repo/${{ env.CONFIG_FILE }} .config

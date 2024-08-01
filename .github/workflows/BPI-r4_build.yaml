@@ -8,6 +8,8 @@ env:
   REMOTE_BRANCH: main
   CONFIG_FILE: bpi-r4.config
   MTK_PPE_ENTRIES_SHIFT_PATCH: 999-01_32k_ppe.patch
+  PREFETCH_PATCH: 999-02_prefetch.patch
+  PP_XDP_PATCH: 999-03_pp_xdp.patch
   CUSTOM_FILES_PATH: files/
   RELEASE_PREFIX: Mediatek_mt7988a_bpi-r4
 
@@ -37,9 +39,11 @@ jobs:
         run: |
           ./scripts/feeds update -a
           ./scripts/feeds install -a
-      - name: Apply 32K PPE Patch
+      - name: Apply Local Patches
         run: |
           mv custom_repo/patches/BPI-r4/${{ env.MTK_PPE_ENTRIES_SHIFT_PATCH }} target/linux/mediatek/patches-6.6/${{ env.MTK_PPE_ENTRIES_SHIFT_PATCH }}
+          mv custom_repo/patches/BPI-r4/${{ env.PREFETCH_PATCH }} target/linux/mediatek/patches-6.6/${{ env.PREFETCH_PATCH }}
+          mv custom_repo/patches/BPI-r4/${{ env.PP_XDP_PATCH }} target/linux/mediatek/patches-6.6/${{ env.PP_XDP_PATCH }}
       - name: Configure firmware image
         run: |
           mv custom_repo/${{ env.CONFIG_FILE }} .config
@@ -51,7 +55,7 @@ jobs:
       - name: Download dependencies
         run: make -j$(($(nproc)+1)) download
       - name: Build the firmware image
-        run: make -j$(($(nproc)+1)) world
+        run: make V=sc -j$(($(nproc)+1)) world
       - name: Package output
         run: tar -cvf bpi_r4-images.tar bin/targets/mediatek/filogic
       - name: Upload artifacts

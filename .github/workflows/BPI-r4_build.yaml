@@ -39,11 +39,21 @@ jobs:
         run: |
           ./scripts/feeds update -a
           ./scripts/feeds install -a
-      - name: Apply Local Patches
+      - name: Apply 32K PPE Patch
         run: |
           mv custom_repo/patches/BPI-r4/${{ env.MTK_PPE_ENTRIES_SHIFT_PATCH }} target/linux/mediatek/patches-6.6/${{ env.MTK_PPE_ENTRIES_SHIFT_PATCH }}
+          cd target/linux/mediatek/patches-6.6
+          git apply ${{ env.MTK_PPE_ENTRIES_SHIFT_PATCH }}
+      - name: Apply PREFETCH Patch
+        run: |
           mv custom_repo/patches/BPI-r4/${{ env.PREFETCH_PATCH }} target/linux/mediatek/patches-6.6/${{ env.PREFETCH_PATCH }}
+          cd target/linux/mediatek/patches-6.6
+          git apply ${{ env.PREFETCH_PATCH }}
+      - name: Apply PP_XDP Patch
+        run: |
           mv custom_repo/patches/BPI-r4/${{ env.PP_XDP_PATCH }} target/linux/mediatek/patches-6.6/${{ env.PP_XDP_PATCH }}
+          cd target/linux/mediatek/patches-6.6
+          git apply ${{ env.PP_XDP_PATCH }}
       - name: Configure firmware image
         run: |
           mv custom_repo/${{ env.CONFIG_FILE }} .config
@@ -55,7 +65,7 @@ jobs:
       - name: Download dependencies
         run: make -j$(($(nproc)+1)) download
       - name: Build the firmware image
-        run: make V=sc -j$(($(nproc)+1)) world
+        run: make -j$(($(nproc)+1)) world
       - name: Package output
         run: tar -cvf bpi_r4-images.tar bin/targets/mediatek/filogic
       - name: Upload artifacts

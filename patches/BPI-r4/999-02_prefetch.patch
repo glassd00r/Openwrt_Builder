@@ -23,7 +23,7 @@ index 16ca427cf4c3..4d0052dbe3f4 100644
  				goto skip_rx;
  
 +			net_prefetch(xdp.data_meta);
- 			skb = napi_build_skb(data, PAGE_SIZE);
+ 			skb = build_skb(data, PAGE_SIZE);
  			if (unlikely(!skb)) {
  				page_pool_put_full_page(ring->page_pool,
 @@ -2113,6 +2116,7 @@  static int mtk_poll_rx(struct napi_struct *napi, int budget,
@@ -39,7 +39,7 @@ index 16ca427cf4c3..4d0052dbe3f4 100644
  					 ring->buf_size, DMA_FROM_DEVICE);
  
 +			net_prefetch(data + NET_SKB_PAD + eth->ip_align);
- 			skb = napi_build_skb(data, ring->frag_size);
+ 			skb = build_skb(data, ring->frag_size);
  			if (unlikely(!skb)) {
  				netdev->stats.rx_dropped++;
 @@ -2150,7 +2155,8 @@  static int mtk_poll_rx(struct napi_struct *napi, int budget,

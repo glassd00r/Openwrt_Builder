@@ -38,7 +38,7 @@ index 16ca427cf4c3..4d0052dbe3f4 100644
  			dma_unmap_single(eth->dma_dev, ((u64)trxd.rxd1 | addr64),
  					 ring->buf_size, DMA_FROM_DEVICE);
  
-+			net_prefetch(data + NET_SKB_PAD + eth->ip_align);
++			net_prefetch(data + NET_SKB_PAD + NET_IP_ALIGN);
  			skb = napi_build_skb(data, ring->frag_size);
  			if (unlikely(!skb)) {
  				netdev->stats.rx_dropped++;
@@ -48,7 +48,7 @@ index 16ca427cf4c3..4d0052dbe3f4 100644
  
 -			skb_reserve(skb, NET_SKB_PAD + NET_IP_ALIGN);
 +			net_prefetchw(skb->data);
-+			skb_reserve(skb, NET_SKB_PAD + eth->ip_align);
++			skb_reserve(skb, NET_SKB_PAD + NET_IP_ALIGN);
  			skb_put(skb, pktlen);
  		}
  

@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
 
 env:
-  REMOTE_REPOSITORY: glassd00r/immortalwrt-mt798x
+  REMOTE_REPOSITORY: padavanonly/immortalwrt-mt798x
   REMOTE_BRANCH: mt7988
   CONFIG_FILE: mtk-sdk-2102.config
   CUSTOM_FILES_PATH: files/
@@ -13,7 +13,7 @@ env:
 jobs:
   build:
     name: Build OpenWrt
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - name: Install dependencies
         run: |
@@ -35,10 +35,11 @@ jobs:
           ./scripts/feeds install -a
       - name: Configure firmware image
         run: |
-          mv custom_repo/${{ env.CONFIG_FILE }} .config
-          make defconfig -j$(nproc)
+          make defconfig
+      - name: Download dependencies
+        run: make -j$(($(nproc)+1)) download
       - name: Build the firmware image
-        run: make download world V=s -j$(nproc)
+        run: make -j$(($(nproc)+1)) world
       - name: Package output
         run: tar -cvf mtk_bpi_r4-images.tar bin/targets/mediatek/mt7988
       - name: Upload artifacts
@@ -51,7 +52,7 @@ jobs:
     name: Create release
     needs: [build]
     if: needs.build.result == 'success'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - name: Download artifacts
         uses: actions/download-artifact@v4

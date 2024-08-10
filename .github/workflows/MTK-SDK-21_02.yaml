@@ -35,6 +35,7 @@ jobs:
           ./scripts/feeds install -a
       - name: Configure firmware image
         run: |
+          mv custom_repo/${{ env.CONFIG_FILE }} .config
           make defconfig
       - name: Download dependencies
         run: make -j$(($(nproc)+1)) download

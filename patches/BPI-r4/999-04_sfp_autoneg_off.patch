@@ -1,0 +1,13 @@
+diff --git a/drivers/net/phy/sfp-bus.c b/drivers/net/phy/sfp-bus.c
+index db39dec7f2471c..7769469668bfa6 100644
+--- a/drivers/net/phy/sfp-bus.c
++++ b/drivers/net/phy/sfp-bus.c
+@@ -335,7 +335,7 @@ void sfp_parse_support(struct sfp_bus *bus, const struct sfp_eeprom_id *id,
+ 		}
+ 	}
+ 
+-	phylink_set(modes, Autoneg);
++	phylink_clear(modes, Autoneg);
+ 	phylink_set(modes, Pause);
+ 	phylink_set(modes, Asym_Pause);
+

@@ -48,8 +48,6 @@ jobs:
         run: make -j $(($(nproc)+1)) download
       - name: Build the firmware image
         run: make -j $(($(nproc)+1)) world
-      - name: Package output
-        run: tar -cvf ipq807xx-images.tar bin/targets/qualcommax/ipq807x
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:

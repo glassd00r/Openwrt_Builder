@@ -64,41 +64,33 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
-
       - name: Download Artifacts
         uses: actions/download-artifact@v4
         with:
           name: ipq807x-images
           path: ./firmware
-
       - name: Create Release
         run: |
           VERSION="AX3600 ${{ env.RELEASE_PREFIX }}-$(date +'%Y.%m.%d')"
           RELEASE_NOTES="Openwrt Commit: ${{ needs.check_commits.outputs.latest_commit_sha }}"
-
           # Check if the release already exists
           if gh release view "$VERSION" &>/dev/null; then
             gh release delete "$VERSION" --cleanup-tag -y
           fi
-
           # Create the new release
           gh release create "$VERSION" ./firmware/* \
             --title "$VERSION" \
             --notes "$RELEASE_NOTES"
-
       - name: Delete old releases and tags
         run: |
           # Get all release tags, sorted by creation date (newest first)
           RELEASE_TAGS=$(gh release list --json tagName --jq '.[].tagName')
-
           # Count total releases
           TOTAL_RELEASES=$(echo "$RELEASE_TAGS" | wc -l)
-
           # If there are more than 6 releases, delete the older ones
           if [ $TOTAL_RELEASES -gt 2 ]; then
             # Skip the first two (latest) releases
-            RELEASES_TO_DELETE=$(echo "$RELEASE_TAGS" | tail -n +3)
-
+            RELEASES_TO_DELETE=$(echo "$RELEASE_TAGS" | tail -n +7)
             # Loop through releases to delete
             echo "$RELEASES_TO_DELETE" | while read -r tag; do
               echo "Deleting release with tag $tag"

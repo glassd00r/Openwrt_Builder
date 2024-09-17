@@ -68,7 +68,6 @@ jobs:
           name: ipq807x-images
           path: ./firmware
       - name: Create Release
-        shell: bash {0}
         run: |
           VERSION="AX3600 ${{ env.RELEASE_PREFIX }}-$(date +'%Y.%m.%d')"
           RELEASE_NOTES="Openwrt Commit: ${{ needs.check_commits.outputs.latest_commit_sha }}"
@@ -77,7 +76,7 @@ jobs:
             gh release delete "$VERSION" --cleanup-tag -y
           fi
           # Create the new release
-          gh release create "$VERSION" ./firmware/* \
+          gh release create "$VERSION" ./firmware/*.* \
             --title "$VERSION" \
             --notes "$RELEASE_NOTES"
       - name: Delete old releases and tags

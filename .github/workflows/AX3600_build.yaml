@@ -76,7 +76,7 @@ jobs:
             gh release delete "$VERSION" --cleanup-tag -y
           fi
           # Create the new release
-          gh release create "$VERSION" ./firmware/* \
+          gh release create "$VERSION" ./firmware \
             --title "$VERSION" \
             --notes "$RELEASE_NOTES"
       - name: Delete old releases and tags

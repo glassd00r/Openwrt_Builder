@@ -12,6 +12,7 @@ env:
   PP_XDP_PATCH: 999-03_pp_xdp.patch
   CUSTOM_FILES_PATH: files/
   RELEASE_PREFIX: Mediatek_mt7988a_bpi-r4
+  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 jobs:  
   build:

@@ -64,41 +64,54 @@ jobs:
         run: make -j$(($(nproc)+1)) download
       - name: Build the firmware image
         run: make -j$(($(nproc)+1)) world
-      - name: Package output
-        run: tar -cvf bpi_r4-images.tar bin/targets/mediatek/filogic
-      - name: Upload artifacts
+      - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: bpi_r4-images
-          path: bpi_r4-images.tar
+          name: filogic880-images
+          path: bin/targets/mediatek/filogic
 
   release:
-    name: Create release
-    needs: [build]
-    if: needs.build.result == 'success'
+    needs: build
     runs-on: ubuntu-24.04
     steps:
-      - name: Download artifacts
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+      - name: Download Artifacts
         uses: actions/download-artifact@v4
         with:
-          name: bpi_r4-images
-      - name: Extract artifacts
-        run: tar xf bpi_r4-images.tar
-      - name: Get current date
-        run: echo "RELEASE_DATE=$(date +%F)" >> $GITHUB_ENV
-      - name: Create release
-        uses: softprops/action-gh-release@master
-        with:
-          files: bin/targets/mediatek/filogic/*
-          tag_name: ${{ env.RELEASE_PREFIX }}-${{ env.RELEASE_DATE }}
-          name: Openwrt BPI-r4 ${{ env.RELEASE_DATE }}
-          body: |
-            Updated prebuilt images for ${{ env.RELEASE_DATE }}
-            Build Commit: ${{ needs.check_commits.outputs.latest_commit_sha }}
-      - name: Clean up old releases
-        uses: dev-drprasad/delete-older-releases@master
-        with:
-          keep_latest: 6
-          delete_tags: true
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          name: filogic880-images
+          path: ./firmware
+      - name: Create Release
+        run: |
+          VERSION="${{ env.RELEASE_PREFIX }}-$(date +'%Y.%m.%d')"
+          # Check if the release already exists
+          if gh release view "$VERSION" &>/dev/null; then
+            gh release delete "$VERSION" --cleanup-tag -y
+          fi
+          # Create the new release
+          FILES_TO_UPLOAD=$(find ./firmware -maxdepth 1 -type f)
+          gh release create "$VERSION" $FILES_TO_UPLOAD \
+            --title "$VERSION"
+
+  cleanup-releases:
+    needs: release
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Delete old releases and tags
+        run: |
+          # Get all release tags, sorted by creation date (newest first)
+          RELEASE_TAGS=$(gh release list --json tagName --jq '.[].tagName')
+          # Count total releases
+          TOTAL_RELEASES=$(echo "$RELEASE_TAGS" | wc -l)
+          # If there are more than 6 releases, delete the older ones
+          if [ $TOTAL_RELEASES -gt 2 ]; then
+            # Skip the first two (latest) releases
+            RELEASES_TO_DELETE=$(echo "$RELEASE_TAGS" | tail -n +7)
+            # Loop through releases to delete
+            echo "$RELEASES_TO_DELETE" | while read -r tag; do
+              echo "Deleting release with tag $tag"
+              gh release delete "$tag" --cleanup-tag -y
+            done
+          fi

@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
 
 env:
-  REMOTE_REPOSITORY: qosmio/openwrt-ipq
+  REMOTE_REPOSITORY: glassd00r/openwrt-ipq
   REMOTE_BRANCH: qualcommax-6.x-nss-ath11k-2.12
   CONFIG_FILE: ax3600.config
   CUSTOM_FILES_PATH: files/

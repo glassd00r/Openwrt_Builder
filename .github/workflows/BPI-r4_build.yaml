@@ -74,26 +74,3 @@ jobs:
           FILES_TO_UPLOAD=$(find ./firmware -maxdepth 1 -type f)
           gh release create "$VERSION" $FILES_TO_UPLOAD \
             --title "$VERSION"
-
-  cleanup-releases:
-    needs: release
-    runs-on: ubuntu-24.04
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-      - name: Delete old releases and tags
-        run: |
-          # Get all release tags, sorted by creation date (newest first)
-          RELEASE_TAGS=$(gh release list --json tagName --jq '.[].tagName')
-          # Count total releases
-          TOTAL_RELEASES=$(echo "$RELEASE_TAGS" | wc -l)
-          # If there are more than 6 releases, delete the older ones
-          if [ $TOTAL_RELEASES -gt 2 ]; then
-            # Skip the first two (latest) releases
-            RELEASES_TO_DELETE=$(echo "$RELEASE_TAGS" | tail -n +7)
-            # Loop through releases to delete
-            echo "$RELEASES_TO_DELETE" | while read -r tag; do
-              echo "Deleting release with tag $tag"
-              gh release delete "$tag" --cleanup-tag -y
-            done
-          fi

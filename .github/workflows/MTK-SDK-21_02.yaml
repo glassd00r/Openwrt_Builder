@@ -49,8 +49,8 @@ jobs:
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: filogic880-images
-          path: bin/targets/mediatek/filogic
+          name: mtk-mt7988-images
+          path: bin/targets/mediatek/mt7988
 
   release:
     needs: build
@@ -61,7 +61,7 @@ jobs:
       - name: Download Artifacts
         uses: actions/download-artifact@v4
         with:
-          name: filogic880-images
+          name: mtk-mt7988-images
           path: ./firmware
       - name: Create Release
         run: |

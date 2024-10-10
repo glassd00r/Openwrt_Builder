@@ -1,14 +1,14 @@
-name: MTK_SDK 21.02 for bpi-r4 and release
+name: Immortalwrt 23.05 for bpi-r4 and release
 
 on:
   workflow_dispatch:
 
 env:
-  REMOTE_REPOSITORY: padavanonly/immortalwrt-mt798x
-  REMOTE_BRANCH: mt7988
-  CONFIG_FILE: mtk-sdk-2102.config
+  REMOTE_REPOSITORY: glassd00r/immortalwrt-mt798x-23.05
+  REMOTE_BRANCH: openwrt-23.05-mt7988
+  CONFIG_FILE: mtk-sdk-2305.config
   CUSTOM_FILES_PATH: files/
-  RELEASE_PREFIX: Mediatek_SDK_2102
+  RELEASE_PREFIX: Immortalwrt-23.05
   GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 jobs:  

@@ -4,8 +4,8 @@ on:
   workflow_dispatch:
 
 env:
-  REMOTE_REPOSITORY: hauke/openwrt
-  REMOTE_BRANCH: nftables
+  REMOTE_REPOSITORY: glassd00r/openwrt
+  REMOTE_BRANCH: main
   CONFIG_FILE: bpi-r4.config
   CUSTOM_FILES_PATH: files/
   RELEASE_PREFIX: Openwrt_mainline_bpi-r4

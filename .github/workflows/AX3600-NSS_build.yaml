@@ -6,7 +6,7 @@ on:
 env:
   REMOTE_REPOSITORY: qosmio/openwrt-ipq
   REMOTE_BRANCH: qualcommax-6.x-nss-wifi
-  CONFIG_FILE: ax3600.config
+  CONFIG_FILE: ax3600-nss.config
   CUSTOM_FILES_PATH: files/
   RELEASE_PREFIX: qualcommax-6.x-nss_12.2
   GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -49,7 +49,7 @@ jobs:
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: ipq807x-images
+          name: ipq807x_nss-images
           path: bin/targets/qualcommax/ipq807x
 
   release:
@@ -61,7 +61,7 @@ jobs:
       - name: Download Artifacts
         uses: actions/download-artifact@v4
         with:
-          name: ipq807x-images
+          name: ipq807x_nss-images
           path: ./firmware
       - name: Create Release
         run: |

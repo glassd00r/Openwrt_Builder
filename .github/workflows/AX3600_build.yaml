@@ -4,11 +4,11 @@ on:
   workflow_dispatch:
 
 env:
-  REMOTE_REPOSITORY: qosmio/openwrt-ipq
-  REMOTE_BRANCH: qualcommax-6.x-nss-wifi
+  REMOTE_REPOSITORY: glassd00r/openwrt
+  REMOTE_BRANCH: main
   CONFIG_FILE: ax3600.config
   CUSTOM_FILES_PATH: files/
-  RELEASE_PREFIX: qualcommax-6.x-nss_12.2
+  RELEASE_PREFIX: qualcommax-6.6-Openwrt
   GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 jobs:

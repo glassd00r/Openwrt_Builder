@@ -8,7 +8,7 @@ env:
   REMOTE_BRANCH: qualcommax-6.x-nss-wifi
   CONFIG_FILE: ax3600-nss.config
   CUSTOM_FILES_PATH: files/
-  RELEASE_PREFIX: qualcommax-6.x-nss_12.2
+  RELEASE_PREFIX: NSS-qualcommax-6.x-nss_12.2
   GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 jobs:

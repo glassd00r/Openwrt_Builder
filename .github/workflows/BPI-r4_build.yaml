@@ -5,10 +5,10 @@ on:
 
 env:
   REMOTE_REPOSITORY: glassd00r/openwrt
-  REMOTE_BRANCH: main
+  REMOTE_BRANCH: openwrt-24.10
   CONFIG_FILE: bpi-r4.config
   CUSTOM_FILES_PATH: files/
-  RELEASE_PREFIX: Openwrt_mainline_bpi-r4
+  RELEASE_PREFIX: Openwrt_24.10_bpi-r4
   GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 jobs:  

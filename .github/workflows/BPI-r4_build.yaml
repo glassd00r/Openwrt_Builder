@@ -1,14 +1,14 @@
-name: OpenWrt 24.10 for Mediatek_mt7988a_bpi-r4 and release
+name: OpenWrt for Mediatek_mt7988a_bpi-r4 and release
 
 on:
   workflow_dispatch:
 
 env:
   REMOTE_REPOSITORY: glassd00r/openwrt
-  REMOTE_BRANCH: openwrt-24.10
+  REMOTE_BRANCH: main
   CONFIG_FILE: bpi-r4.config
   CUSTOM_FILES_PATH: files/
-  RELEASE_PREFIX: Openwrt_24.10_bpi-r4
+  RELEASE_PREFIX: Openwrt_mtk_bpi-r4
   GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 jobs:  

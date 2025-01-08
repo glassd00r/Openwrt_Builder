@@ -135,7 +135,7 @@ table inet fw4 {
 		type filter hook forward priority filter; policy {{ fw4.forward_policy(true) }};
 
 {% if (length(flowtable_devices) > 0): %}
-		meta l4proto { tcp, udp } flow offload @ft;
+		meta l4proto { tcp } flow offload @ft;
 {% endif %}
 {% fw4.includes('chain-prepend', 'forward') %}
 		ct state vmap { established : accept, related : accept{% if (fw4.default_option("drop_invalid")): %}, invalid : drop{% endif %} } comment "!fw4: Handle forwarded flows"

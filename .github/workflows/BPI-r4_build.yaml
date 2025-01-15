@@ -45,7 +45,7 @@ jobs:
       - name: Download dependencies
         run: make -j$(($(nproc)+1)) download
       - name: Build the firmware image
-        run: make -j$(($(nproc)+1)) V=sc world
+        run: make -j$(($(nproc)+1)) world
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:

@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
 
 env:
-  REMOTE_REPOSITORY: glassd00r/openwrt
+  REMOTE_REPOSITORY: openwrt/openwrt
   REMOTE_BRANCH: main
   CONFIG_FILE: ax3600.config
   CUSTOM_FILES_PATH: files/

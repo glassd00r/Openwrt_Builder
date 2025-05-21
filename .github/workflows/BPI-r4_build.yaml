@@ -5,7 +5,7 @@ on:
 
 env:
   REMOTE_REPOSITORY: glassd00r/openwrt
-  REMOTE_BRANCH: openwrt-24.10
+  REMOTE_BRANCH: main
   CONFIG_FILE: bpi-r4.config
   CUSTOM_FILES_PATH: files/
   RELEASE_PREFIX: Openwrt_mtk_bpi-r4

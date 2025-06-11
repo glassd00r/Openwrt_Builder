@@ -1,4 +1,4 @@
-name: OpenWrt 24.10-sdk for Mediatek_mt7988a_bpi-r4 and release
+name: OpenWrt 24.10-hnat for Mediatek_mt7988a_bpi-r4 and release
 
 on:
   workflow_dispatch:

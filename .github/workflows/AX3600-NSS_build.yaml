@@ -1,4 +1,4 @@
-name: OpenWrt main-nss for qualcomm-ipq and release
+name: OpenWrt main-nss for Qualcommax_ipq807x_AX3600 and release
 
 permissions:
   contents: write

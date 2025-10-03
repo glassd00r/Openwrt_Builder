@@ -1,4 +1,4 @@
-name: Build OpenWrt for specific target and release
+name: OpenWrt main-nss for qualcomm-ipq and release
 
 permissions:
   contents: write

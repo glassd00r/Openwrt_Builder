@@ -4,8 +4,8 @@ on:
   workflow_dispatch:
 
 env:
-  REMOTE_REPOSITORY: glassd00r/immortalwrt-mt798x-6.6
-  REMOTE_BRANCH: mt7988-2410-6.6
+  REMOTE_REPOSITORY: glassd00r/BPI-R4PRO-8X-OPENWRT-V24.10.0-Master-Devel
+  REMOTE_BRANCH: main
   CONFIG_FILE: bpi-r4_mtk-hnat.config
   CUSTOM_FILES_PATH: files/
   RELEASE_PREFIX: Openwrt_bpi-r4_24.10_mtk-hnat

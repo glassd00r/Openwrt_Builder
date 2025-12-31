@@ -6,7 +6,7 @@ on:
 env:
   REMOTE_REPOSITORY: glassd00r/openwrt
   REMOTE_BRANCH: openwrt-24.10
-  CONFIG_FILE: bpi-r4_mtk-sdk.config
+  CONFIG_FILE: bpi-r4_24-10.config
   CUSTOM_FILES_PATH: files/
   RELEASE_PREFIX: Openwrt_bpi-r4_24.10_mtk-sdk
   GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

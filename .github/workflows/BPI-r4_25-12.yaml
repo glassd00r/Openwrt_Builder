@@ -5,8 +5,8 @@ on:
 
 env:
   REMOTE_REPOSITORY: glassd00r/openwrt
-  REMOTE_BRANCH: main
-  CONFIG_FILE: bpi-r4.config
+  REMOTE_BRANCH: openwrt-25.12
+  CONFIG_FILE: bpi-r4_25-12.config
   CUSTOM_FILES_PATH: files/
   RELEASE_PREFIX: Openwrt_mtk_bpi-r4
   GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -16,12 +16,6 @@ jobs:
     name: Build OpenWrt
     runs-on: ubuntu-24.04
     steps:
-      - name: Maximize build space
-        uses: easimon/maximize-build-space@master
-        with:
-          root-reserve-mb: 512
-          swap-size-mb: 1024
-          remove-dotnet: 'true'
       - name: Install dependencies
         run: |
           sudo apt update

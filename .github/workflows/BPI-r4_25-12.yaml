@@ -8,7 +8,7 @@ env:
   REMOTE_BRANCH: openwrt-25.12
   CONFIG_FILE: bpi-r4_25-12.config
   CUSTOM_FILES_PATH: files/
-  RELEASE_PREFIX: Openwrt_mtk_bpi-r4
+  RELEASE_PREFIX: Openwrt_bpi-r4_25.12_mtk-sdk
   GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 jobs:  

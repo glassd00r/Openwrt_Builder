@@ -16,6 +16,10 @@ jobs:
     name: Build OpenWrt
     runs-on: ubuntu-24.04
     steps:
+      - name: Max Space
+        run: |
+          sudo rm -rf /usr/share/dotnet
+          sudo rm -rf "$AGENT_TOOLSDIRECTORY"
       - name: Install dependencies
         run: |
           sudo apt update

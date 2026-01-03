@@ -1,4 +1,4 @@
-name: BPI-r4_24-10_SDK and release
+name: BPI-r4 24-10_SDK and release
 on:
   workflow_dispatch:
 

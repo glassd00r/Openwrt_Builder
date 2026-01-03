@@ -1,5 +1,4 @@
-name: OpenWrt 24.10-sdk for Mediatek_mt7988a_bpi-r4 and release
-
+name: BPI-r4_24-10_SDK and release
 on:
   workflow_dispatch:
 
@@ -8,7 +7,7 @@ env:
   REMOTE_BRANCH: openwrt-24.10
   CONFIG_FILE: bpi-r4_24-10.config
   CUSTOM_FILES_PATH: files/
-  RELEASE_PREFIX: Openwrt_bpi-r4_24.10_mtk-sdk
+  RELEASE_PREFIX: BPI-r4_24-10_SDK
   GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 jobs:  

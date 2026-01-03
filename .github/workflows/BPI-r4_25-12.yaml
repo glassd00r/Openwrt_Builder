@@ -1,4 +1,4 @@
-name: OpenWrt 25.12-sdk for Mediatek_mt7988a_bpi-r4 and release
+name: BPI-r4 25-12_SDK and release
 
 on:
   workflow_dispatch:
@@ -8,7 +8,7 @@ env:
   REMOTE_BRANCH: openwrt-25.12
   CONFIG_FILE: bpi-r4_25-12.config
   CUSTOM_FILES_PATH: files/
-  RELEASE_PREFIX: Openwrt_bpi-r4_25.12_mtk-sdk
+  RELEASE_PREFIX: BPI-r4_25-12_SDK
   GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 jobs:  

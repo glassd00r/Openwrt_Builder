@@ -1,4 +1,4 @@
-name: OpenWrt main-sdk for Mediatek_mt7988a_bpi-r4 and release
+name: BPI-r4 Mainline_SDK and release
 
 on:
   workflow_dispatch:
@@ -8,7 +8,7 @@ env:
   REMOTE_BRANCH: bpi-r4_main
   CONFIG_FILE: bpi-r4_main.config
   CUSTOM_FILES_PATH: files/
-  RELEASE_PREFIX: Openwrt_bpi-r4_main_mtk-sdk
+  RELEASE_PREFIX: BPI-r4_Mainline_SDK
   GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 jobs:  

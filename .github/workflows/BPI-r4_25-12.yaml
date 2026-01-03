@@ -16,9 +16,6 @@ jobs:
     name: Build OpenWrt
     runs-on: ubuntu-24.04
     steps:
-      - name: Increase Space
-        run: |
-          sudo rm -rf /usr/share/dotnet
       - name: Install dependencies
         run: |
           sudo apt update

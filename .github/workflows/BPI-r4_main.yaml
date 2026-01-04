@@ -50,7 +50,7 @@ jobs:
       - name: Build the firmware image
         run: make -j$(($(nproc)+1)) V=sc world
       - name: Upload Artifacts
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: filogic880-images
           path: bin/targets/mediatek/filogic
@@ -62,7 +62,7 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v6
       - name: Download Artifacts
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v7
         with:
           name: filogic880-images
           path: ./firmware

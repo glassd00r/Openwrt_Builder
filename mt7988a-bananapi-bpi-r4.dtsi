@@ -44,18 +44,6 @@
 		regulator-always-on;
 	};
 
-	/* SFP1 cage (WAN) */
-	sfp1: sfp1 {
-		compatible = "sff,sfp";
-		i2c-bus = <&i2c_sfp1>;
-		los-gpios = <&pio 54 GPIO_ACTIVE_HIGH>;
-		mod-def0-gpios = <&pio 82 GPIO_ACTIVE_LOW>;
-		tx-disable-gpios = <&pio 70 GPIO_ACTIVE_HIGH>;
-		tx-fault-gpios = <&pio 69 GPIO_ACTIVE_HIGH>;
-		rate-select0-gpios = <&pio 21 GPIO_ACTIVE_LOW>;
-		maximum-power-milliwatt = <3000>;
-	};
-
 	aliases {
 		ethernet0 = &gmac0;
 		ethernet1 = &gmac1;
@@ -70,18 +58,6 @@
 	memory@40000000 {
 		reg = <0x00 0x40000000 0x00 0x10000000>;
 		device_type = "memory";
-	};
-
-	/* SFP1 cage (WAN) */
-	sfp1: sfp1 {
-		compatible = "sff,sfp";
-		i2c-bus = <&i2c_sfp1>;
-		los-gpios = <&pio 54 GPIO_ACTIVE_HIGH>;
-		mod-def0-gpios = <&pio 82 GPIO_ACTIVE_LOW>;
-		tx-disable-gpios = <&pio 70 GPIO_ACTIVE_HIGH>;
-		tx-fault-gpios = <&pio 69 GPIO_ACTIVE_HIGH>;
-		rate-select0-gpios = <&pio 21 GPIO_ACTIVE_LOW>;
-		maximum-power-milliwatt = <3000>;
 	};
 
 	gpio-keys {
@@ -122,9 +98,8 @@
 };
 
 &gmac2 {
-	sfp = <&sfp1>;
 	managed = "in-band-status";
-	phy-mode = "usxgmii";
+	phy-mode = "10gbase-r";
 	openwrt,netdev-name = "sfp-wan";
 	status = "okay";
 };
@@ -259,12 +234,6 @@
 			trip = <&cpu_trip_active_low>;
 		};
 	};
-};
-
-&gmac2 {
-	sfp = <&sfp1>;
-	managed = "in-band-status";
-	phy-mode = "usxgmii";
 };
 
 &gsw_phy0 {

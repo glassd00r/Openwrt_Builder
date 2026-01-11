@@ -1795,16 +1795,16 @@ country SE: DFS-ETSI
 # Note: The transmit power for 5470-5725MHz bands can be raised (by 3dBm) to 1000mW when TPC is implemented: IMDA TS SRD Table 1 Sub-band 34
 
 country SG: DFS-FCC
-	(2400 - 2483.5 @ 40), (200 mW)
-	(5150 - 5250 @ 80), (200 mW), AUTO-BW
-	(5250 - 5350 @ 80), (100 mW), DFS, AUTO-BW
+	(2400 - 2483.5 @ 40), (1000 mW)
+	(5150 - 5250 @ 80), (1000 mW), AUTO-BW
+	(5250 - 5350 @ 80), (1000 mW), AUTO-BW
         # This range ends at 5725 MHz, but channel 144 extends to 5730 MHz.
         # Since 5725 ~ 5730 MHz belongs to the next range which has looser
         # requirements, we can extend the range by 5 MHz to make the kernel
         # happy and be able to use channel 144.
-	(5470 - 5730 @ 160), (500 mW), DFS
+	(5470 - 5730 @ 160), (1000 mW)
 	(5725 - 5850 @ 80), (1000 mW)
-	(5945 - 6425 @ 320), (250 mW), NO-OUTDOOR
+	(5945 - 6425 @ 320), (1000 mW), NO-OUTDOOR
 	(57000 - 66000 @ 2160), (10000 mW)
 
 # SI as part of EU/CEPT accepted decisions 2005/513/EC (5GHz RLAN, EN 301 893)

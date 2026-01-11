@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
 
 env:
-  REMOTE_REPOSITORY: qosmio/openwrt-ipq
+  REMOTE_REPOSITORY: glassd00r/openwrt
   REMOTE_BRANCH: main-nss
   CONFIG_FILE: ax3600-nss.config
   CUSTOM_FILES_PATH: files/

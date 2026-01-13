@@ -1,14 +1,14 @@
-name: BPI-r4 Mainline_SDK and release
+name: W1700k Mainline and release
 
 on:
   workflow_dispatch:
 
 env:
   REMOTE_REPOSITORY: glassd00r/openwrt
-  REMOTE_BRANCH: bpi-r4_main
-  CONFIG_FILE: bpi-r4_main.config
+  REMOTE_BRANCH: w1700k-minimal
+  CONFIG_FILE: w1700k_main.config
   CUSTOM_FILES_PATH: files/
-  RELEASE_PREFIX: BPI-r4_Mainline_SDK
+  RELEASE_PREFIX: W1700k_Mainline
   GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 jobs:  
@@ -52,8 +52,8 @@ jobs:
       - name: Upload Artifacts
         uses: actions/upload-artifact@v6
         with:
-          name: filogic880-images
-          path: bin/targets/mediatek/filogic
+          name: airoha_an7581-images
+          path: bin/targets/airoha/an7581
 
   release:
     needs: build
@@ -64,7 +64,7 @@ jobs:
       - name: Download Artifacts
         uses: actions/download-artifact@v7
         with:
-          name: filogic880-images
+          name: airoha_an7581-images
           path: ./firmware
       - name: Create Release
         run: |

@@ -6,9 +6,9 @@ on:
 env:
   REMOTE_REPOSITORY: glassd00r/openwrt
   REMOTE_BRANCH: w1700k-minimal
-  CONFIG_FILE: w1700k_main.config
+  CONFIG_FILE: w1700k-main.config
   CUSTOM_FILES_PATH: files/
-  RELEASE_PREFIX: W1700k-Mainline
+  RELEASE_PREFIX: W1700k_Mainline
   GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 jobs:  

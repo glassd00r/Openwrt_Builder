@@ -5,7 +5,7 @@ on:
 
 env:
   REMOTE_REPOSITORY: glassd00r/openwrt
-  REMOTE_BRANCH: w1700k-lumos
+  REMOTE_BRANCH: w1700k-base
   CONFIG_FILE: w1700k-main.config
   CUSTOM_FILES_PATH: files/
   RELEASE_PREFIX: W1700k_Mainline

@@ -4,6 +4,7 @@
 #include <linux/cpufreq.h>
 #include <linux/module.h>
 #include <linux/platform_device.h>
+#include <linux/pm_domain.h>
 #include <linux/pm_runtime.h>
 #include <linux/slab.h>
 
@@ -11,7 +12,7 @@
 
 struct airoha_cpufreq_priv {
 	int opp_token;
-	struct device **virt_devs;
+	struct dev_pm_domain_list *pd_list;
 	struct platform_device *cpufreq_dt;
 };
 
@@ -20,7 +21,6 @@ static struct platform_device *cpufreq_pdev;
 /* NOP function to disable OPP from setting clock */
 static int airoha_cpufreq_config_clks_nop(struct device *dev,
 					  struct opp_table *opp_table,
-					  struct dev_pm_opp *old_opp,
 					  struct dev_pm_opp *opp,
 					  void *data, bool scaling_down)
 {
@@ -28,19 +28,22 @@ static int airoha_cpufreq_config_clks_nop(struct device *dev,
 }
 
 static const char * const airoha_cpufreq_clk_names[] = { "cpu", NULL };
-static const char * const airoha_cpufreq_pd_names[] = { "perf", NULL };
+static const char * const airoha_cpufreq_pd_names[] = { "perf" };
 
 static int airoha_cpufreq_probe(struct platform_device *pdev)
 {
+	const struct dev_pm_domain_attach_data attach_data = {
+		.pd_names = airoha_cpufreq_pd_names,
+		.num_pd_names = ARRAY_SIZE(airoha_cpufreq_pd_names),
+		.pd_flags = PD_FLAG_DEV_LINK_ON | PD_FLAG_REQUIRED_OPP,
+	};
 	struct dev_pm_opp_config config = {
 		.clk_names = airoha_cpufreq_clk_names,
 		.config_clks = airoha_cpufreq_config_clks_nop,
-		.genpd_names = airoha_cpufreq_pd_names,
 	};
 	struct platform_device *cpufreq_dt;
 	struct airoha_cpufreq_priv *priv;
 	struct device *dev = &pdev->dev;
-	struct device **virt_devs = NULL;
 	struct device *cpu_dev;
 	int ret;
 
@@ -58,33 +61,17 @@ static int airoha_cpufreq_probe(struct platform_device *pdev)
 	if (priv->opp_token < 0)
 		return dev_err_probe(dev, priv->opp_token, "Failed to set OPP config\n");
 
-	/* Set Attached PM for OPP ACTIVE */
-	if (virt_devs) {
-		const char * const *name = airoha_cpufreq_pd_names;
-		int i, j;
-
-		for (i = 0; *name; i++, name++) {
-			ret = pm_runtime_resume_and_get(virt_devs[i]);
-			if (ret) {
-				dev_err(cpu_dev, "failed to resume %s: %d\n",
-					*name, ret);
-
-				/* Rollback previous PM runtime calls */
-				name = config.genpd_names;
-				for (j = 0; *name && j < i; j++, name++)
-					pm_runtime_put(virt_devs[j]);
-
-				goto err_register_cpufreq;
-			}
-		}
-		priv->virt_devs = virt_devs;
-	}
+	/* Attach PM for OPP */
+	ret = dev_pm_domain_attach_list(cpu_dev, &attach_data,
+					&priv->pd_list);
+	if (ret)
+		goto clear_opp_config;
 
 	cpufreq_dt = platform_device_register_simple("cpufreq-dt", -1, NULL, 0);
 	ret = PTR_ERR_OR_ZERO(cpufreq_dt);
 	if (ret) {
 		dev_err(dev, "failed to create cpufreq-dt device: %d\n", ret);
-		goto err_register_cpufreq;
+		goto detach_pm;
 	}
 
 	priv->cpufreq_dt = cpufreq_dt;
@@ -92,7 +79,9 @@ static int airoha_cpufreq_probe(struct platform_device *pdev)
 
 	return 0;
 
-err_register_cpufreq:
+detach_pm:
+	dev_pm_domain_detach_list(priv->pd_list);
+clear_opp_config:
 	dev_pm_opp_clear_config(priv->opp_token);
 
 	return ret;
@@ -101,26 +90,24 @@ err_register_cpufreq:
 static void airoha_cpufreq_remove(struct platform_device *pdev)
 {
 	struct airoha_cpufreq_priv *priv = platform_get_drvdata(pdev);
-	const char * const *name = airoha_cpufreq_pd_names;
-	int i;
 
 	platform_device_unregister(priv->cpufreq_dt);
 
-	dev_pm_opp_clear_config(priv->opp_token);
+	dev_pm_domain_detach_list(priv->pd_list);
 
-	for (i = 0; *name; i++, name++)
-		pm_runtime_put(priv->virt_devs[i]);
+	dev_pm_opp_clear_config(priv->opp_token);
 }
 
 static struct platform_driver airoha_cpufreq_driver = {
 	.probe = airoha_cpufreq_probe,
-	.remove_new = airoha_cpufreq_remove,
+	.remove = airoha_cpufreq_remove,
 	.driver = {
 		.name = "airoha-cpufreq",
 	},
 };
 
 static const struct of_device_id airoha_cpufreq_match_list[] __initconst = {
+	{ .compatible = "airoha,an7583" },
 	{ .compatible = "airoha,en7581" },
 	{},
 };

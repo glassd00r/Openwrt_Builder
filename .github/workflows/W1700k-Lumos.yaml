@@ -1,4 +1,4 @@
-name: W1700k Mainline and release
+name: W1700k Lumos and release
 
 on:
   workflow_dispatch:
@@ -8,7 +8,7 @@ env:
   REMOTE_BRANCH: w1700k-lumos
   CONFIG_FILE: w1700k-lumos.config
   CUSTOM_FILES_PATH: files/
-  RELEASE_PREFIX: W1700k_Mainline
+  RELEASE_PREFIX: W1700k_Lumos
   GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 jobs:  

@@ -1,14 +1,14 @@
-name: W1700k Lumos and release
+name: W1700k NPU and release
 
 on:
   workflow_dispatch:
 
 env:
   REMOTE_REPOSITORY: glassd00r/openwrt
-  REMOTE_BRANCH: w1700k-lumos
-  CONFIG_FILE: w1700k-lumos.config
+  REMOTE_BRANCH: w1700k-main-npu
+  CONFIG_FILE: w1700k-npu.config
   CUSTOM_FILES_PATH: files/
-  RELEASE_PREFIX: W1700k_Lumos
+  RELEASE_PREFIX: W1700k_NPU
   GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 jobs:  

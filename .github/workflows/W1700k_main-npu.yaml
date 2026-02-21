@@ -5,7 +5,7 @@ on:
 
 env:
   REMOTE_REPOSITORY: glassd00r/openwrt
-  REMOTE_BRANCH: w1700k-testing-npu
+  REMOTE_BRANCH: w1700k-main-npu
   CONFIG_FILE: w1700k-npu.config
   CUSTOM_FILES_PATH: files/
   RELEASE_PREFIX: W1700k_NPU

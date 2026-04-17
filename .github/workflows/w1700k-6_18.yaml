@@ -5,7 +5,7 @@ on:
 
 env:
   REMOTE_REPOSITORY: glassd00r/openwrt
-  REMOTE_BRANCH: airoha-6.18-work
+  REMOTE_BRANCH: w1700k-6.18
   CONFIG_FILE: w1700k-6_18.config
   CUSTOM_FILES_PATH: files/
   RELEASE_PREFIX: W1700k_Test_6.18

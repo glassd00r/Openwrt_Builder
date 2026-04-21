@@ -5,7 +5,7 @@ on:
 
 env:
   REMOTE_REPOSITORY: glassd00r/openwrt
-  REMOTE_BRANCH: w1700k-6.18-offload
+  REMOTE_BRANCH: w1700k-6.18-bridger
   CONFIG_FILE: w1700k-6_18-offload.config
   CUSTOM_FILES_PATH: files/
   RELEASE_PREFIX: W1700k_Test_6.18_Offload

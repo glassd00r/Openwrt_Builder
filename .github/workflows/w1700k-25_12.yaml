@@ -1,4 +1,4 @@
-name: W1700k Test-6.18 and release
+name: W1700k 25.12 and release
 
 on:
   workflow_dispatch:

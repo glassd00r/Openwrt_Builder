@@ -5,10 +5,10 @@ on:
 
 env:
   REMOTE_REPOSITORY: glassd00r/openwrt
-  REMOTE_BRANCH: w1700k-6.18
-  CONFIG_FILE: w1700k-6_18.config
+  REMOTE_BRANCH: w1700k-25.12
+  CONFIG_FILE: w1700k-25_12.config
   CUSTOM_FILES_PATH: files/
-  RELEASE_PREFIX: W1700k_Test_6.18
+  RELEASE_PREFIX: W1700k_25.12
   GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 jobs:  
